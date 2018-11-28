@@ -1,0 +1,126 @@
+{% if blockbuilder %}
+<footer class="footer-blockbuilder">
+  {{ blockbuilder }}
+   {% if logged %}
+   <a class="logitout" href="{{ logout }}">Logout</a>
+   {% endif %}
+</footer> 
+{% else %}
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-3 col-sm-6 col-xs-12">
+        <h5>{{ text_contact }}</h5>
+        <address>{{ text_address }}</address>
+      </div>
+      <div class="col-md-3 col-sm-6 col-xs-12">
+        <h5>{{ text_service }}</h5>
+        <ul class="list-unstyled">
+          <li><a href="{{ contact }}">{{ text_contact }}</a></li>
+          <li><a href="{{ return }}">{{ text_return }}</a></li>
+          <li><a href="{{ sitemap }}">{{ text_sitemap }}</a></li>
+          <li><a href="{{ manufacturer }}">{{ text_manufacturer }}</a></li>
+          <li><a href="{{ affiliate }}">{{ text_affiliate }}</a></li>  
+        </ul>
+      </div>
+      {% if informations %}
+      <div class="col-md-3 col-sm-6 col-xs-12">
+        <h5>{{ text_information }}</h5>
+        <ul class="list-unstyled">
+         {% for information in informations %}
+          <li><a href="{{ information.href }}">{{ information.title }}</a></li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
+      <div class="col-md-3 col-sm-6 col-xs-12">
+        <h5>{{ text_account }}</h5>
+        <ul class="list-unstyled">
+          <li><a href="{{ account }}">{{ text_account }}</a></li>
+          <li><a href="{{ order }}">{{ text_order }}</a></li>
+          <li><a href="{{ wishlist }}">{{ text_wishlist }}</a></li>
+          <li><a href="{{ newsletter }}">{{ text_newsletter }}</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</footer>
+{% endif %}
+{% for script in scripts %}
+<script src="{{ script }}" type="text/javascript"></script>
+{% endfor %}
+<script>
+$(document).ready(function(){
+    
+    var old_product_price = $('h2.detail.price-new').text();
+    
+    $('#product').append('<input type="hidden" name="product_old_price" class="product_old_price" value="'+old_product_price+'">');
+    $('#product ._select_size_div select').on('change',function(){
+        
+        var product_price = $('.product_old_price').val();
+        var product_currency = product_price.substr(0,1);
+        product_price = product_price.substring(1, product_price.length);
+        
+        var product_variant_price = '0.00';
+        
+        var select_val = $(this).val();
+        var select_text = $(this).find('option:selected').text();
+        if (select_text.indexOf('(') > -1)
+        {
+            var split_select_text = select_text.split('(');
+            product_variant_price = split_select_text.slice(-1)[0].substring(2, split_select_text.slice(-1)[0].length);
+            product_variant_price = product_variant_price.trim().slice(0,-1)
+        }
+        
+        if(product_price % 1 != 0){
+            var price_not_zero = true;
+        }
+        else{
+            var price_not_zero = false;
+        }
+        
+        if(product_variant_price % 1 != 0){
+            var product_variant_price_not_zero = true;
+        }
+        else{
+            var product_variant_price_not_zero = false;
+        }
+        
+        product_price = parseFloat(product_price);
+        product_variant_price = parseFloat(product_variant_price);
+        
+        var total_price = product_price+product_variant_price;
+        var finalprice = product_price+product_variant_price;
+        if(price_not_zero == false && product_variant_price_not_zero == false){
+            total_price = total_price.toFixed( 2 );
+        }
+        
+        /** rad cutom code start **/
+        if((typeof $('.old_product_price').val()) != 'undefined'){ $('.old_product_price').val((product_currency+total_price)); }
+        
+        if((typeof $('.cushion_rad').val()) != 'undefined'){
+            $('.cushion_rad').each(function(){
+                var sel_text_val = $(this).val();
+                var sel_price_val = $(this).data('rad-price');
+                sel_price_val = parseFloat(sel_price_val.substring(1));
+                
+                if((!isNaN(sel_price_val)) && (sel_text_val.length > 0)){
+                    finalprice = (finalprice + sel_price_val);
+                }
+            });
+        }
+        /** rad cutom code end **/
+        
+        //$('h2.detail.price-new').html(product_currency+total_price);
+        $('h2.detail.price-new').html(product_currency+(finalprice.toFixed(2)));
+        
+    });
+});
+</script>
+<!--
+OpenCart is open source software and you are free to remove the powered by OpenCart if you want, but its generally accepted practise to make a small donation.
+Please donate via PayPal to donate@opencart.com
+//-->
+{{ user_popup }}
+<div id="top"><a class="backtop scrollup" href=""><i class="fa fa-angle-up"></i></a></div>
+</body></html>

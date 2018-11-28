@@ -1,0 +1,25 @@
+<div class="features-sellers {{settings.layout}} {{settings.extra_class}}">
+
+	{% if settings.title_product %}
+	<h2>{{ settings.title_product }}
+	    {% if settings.subtitle_product and settings.subtitle_product != '<p><br></p>' %}
+	   <small>{{ settings.subtitle_product }}</small>
+      {% endif %}	
+	</h2>
+	{% endif %}	 
+	
+	<div class="feautred-seller-list ">
+     {% for sellerlist in settings.sellerlists %}
+       <div class="box-layout col-md-3 col-sm-6 col-xs-12">
+          <div class="inner-custom-ima">{% for product in sellerlist['products']%}
+           	<div class="image"><div class="call-images"><a href="{{ product.href }}"><img src="{{ product.thumb }}" alt="{{ product.name }}" title="{{ product.name }}" class="img-responsive" /></a></div></div>
+          {% endfor %}</div>
+
+       <div class="seller-info"><img src="{{ sellerlist['seller']['avatar'] }}">
+       <div class="seller-des-custom">by {{ sellerlist['seller']['screenname'] }}<small> {{ sellerlist['seller']['country'] }}</small></div></div>
+       <div class="seller-link-shop"><a href="{{sellerlist['shoplink']}}" class="visit-shop">Visit Shop</a></div>
+       </div>
+     {% endfor %}
+	</div>
+
+</div>	 

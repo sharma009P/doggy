@@ -1,0 +1,91 @@
+{% set id = random(1..9) + random() %}
+<div class="pavo-widget-custom_blog {{settings.layout}} {{ settings.extra_class ? [ ' ', settings.extra_class ] | join() : '' }}">
+    <div class = "panel panel-default">
+        <div class="panel-body">
+            <div class="col-md-8 col-sm-8 blog-first">
+                <div class="blogs-thumb transition">
+                    <div class="image text-center">
+                        <a href="{{ settings.first_blog.link }}" class="pa-element blog-image">
+                            <img src="{{ settings.first_blog.thumb }}" alt="{{settings.first_blog.name}}" class="img-responsive" />
+                        </a>
+                    </div>
+                    <div class="blog-username ">
+                        <span>{{ settings.first_blog.username }}</span>
+                    </div>
+                    -
+                    <div class="blog-date">{{ settings.first_blog.date_added }}</div>
+                    <div class="blog-body">
+                        <div class="blog-title">
+                            <a href="{{ settings.first_blog.link }}" class="pa-element title">
+                            {{ (settings.first_blog.name|striptags)|slice(0,58) }}
+                            </a>
+                        </div>
+                        <div class="blog-content">
+                            {{ (settings.first_blog.content|striptags)|slice(0,58) }}...
+                            <a href="{{ settings.first_blog.link }}" class="blog-content1">{{ entry_read_more_text }}</a>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class=" col-md-4 col-sm-4 custom-blog {% if (settings.posts|length)-1 <= settings.view*settings.rows %}swiper-no-swiping{% endif %}">
+                <div id="customblog{{id}}" class="swiper-container pavo-swiper">
+                    <div class="swiper-wrapper">
+                        {% for post in settings.posts|slice(1,(settings.posts|length - 1)) %}
+                            <div class="swiper-slide">
+                                <div class="blogs-thumb transition">
+                                    <div class="image text-center">
+                                        <a href="{{ post.link }}" class="pa-element blog-image">
+                                            <img src="{{ post.thumb }}" alt="{{post.name}}" class="img-responsive" />
+                                        </a>
+                                    </div>
+                                    <div class="blog-username ">
+                                        <span>{{ post.username }}</span>
+                                    </div>
+                                    -
+                                    <div class="blog-date">{{ post.date_added }}</div>
+                                    <div class="blog-body">
+                                        <div class="blog-title">
+                                            <a href="{{ post.link }}" class="pa-element title">
+                                            {{ (post.name|striptags)|slice(0,58) }}
+                                            </a>
+                                        </div>
+                                        <div class="blog-content">
+                                            {{ (post.content|striptags)|slice(0,58) }}...
+                                            <a href="{{ post.link }}" class="blog-content1">{{ entry_read_more_text }}</a>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="swiper-pager">
+                        <div class="swiper-button-prev"></div>
+                        <div class="swiper-button-next"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript"><!--
+    $('#customblog{{id}}').swiper({
+        pause: 'hover',
+        nextButton: '.swiper-button-next',
+        prevButton: '.swiper-button-prev',
+        slidesPerView: {{ settings.view ? settings.view : 2 }},
+        loop:{{ settings.loop == 'true' ? settings.loop : 'false'}},
+        autoplay: {% if settings.auto_play == 'enabled' %}{{ settings.interval }}{% else %}0{% endif %},
+        noSwipingClass: 'swiper-no-swiping',
+        slidesPerColumn:{{ settings.rows ? settings.rows : 1 }},
+        spaceBetween: 10,
+        {% if settings.loop != "true" %}
+        onReachEnd:function(swiper){
+            $('.swiper-button-next').one('click',function () {
+                swiper.slideTo(0, 800, false);
+            });
+        },
+        {% endif %}
+    });
+--></script>

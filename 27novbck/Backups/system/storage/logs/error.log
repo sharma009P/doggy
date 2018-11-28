@@ -1,0 +1,5 @@
+2018-06-23 11:52:24 - PHP Warning:  mysqli::mysqli(): (HY000/1102): Incorrect database name 'admin_opencart ' in /var/www/vhosts/doggy.co.uk/httpdocs/demo/system/library/db/mysqli.php on line 7
+2018-06-23 11:52:24 - PHP Warning:  DB\MySQLi::__construct(): Couldn't fetch mysqli in /var/www/vhosts/doggy.co.uk/httpdocs/demo/system/library/db/mysqli.php on line 10
+2018-06-23 11:52:24 - PHP Warning:  DB\MySQLi::__construct(): Couldn't fetch mysqli in /var/www/vhosts/doggy.co.uk/httpdocs/demo/system/library/db/mysqli.php on line 10
+2018-06-23 11:52:24 - PHP Notice:  Undefined variable: mysql in /var/www/vhosts/doggy.co.uk/httpdocs/demo/install/controller/install/step_3.php on line 280
+2018-06-23 11:52:24 - PHP Notice:  Trying to get property of non-object in /var/www/vhosts/doggy.co.uk/httpdocs/demo/install/controller/install/step_3.php on line 280

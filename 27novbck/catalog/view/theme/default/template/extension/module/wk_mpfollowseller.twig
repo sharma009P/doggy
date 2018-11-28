@@ -1,0 +1,252 @@
+<div class="marketplace" id="marketplace">
+	<style type="text/css">
+		.wk_mpFollowSeller{
+			border : 2px solid #CCCCCC;
+			padding: 10px;
+		}
+	</style>
+	{% if visibilityOfMod is defined and visibilityOfMod %}
+	<div class="row wk_mpFollowSeller">
+		<h2>{{ heading_title }}</h2>
+		{% if wk_mpfollowseller_other_option_id is defined %}
+			<ul class="nav nav-tabs" id="follow_seller_tabs">
+				  {% set count = 0 %}
+					{% for i in 0..wk_mpfollowseller_other_option_id|length %}
+					{% set arrayName = wk_mpfollowseller_other_option_id[i] ~ '_value' %}
+						{% if arrayName is defined and arrayName %}
+						   {% if count == 0 %}
+				    	  	 <li><a href="#{{ wk_mpfollowseller_other_option_id[i] }}" data-toggle="tab">{{ wk_mpfollowseller_other_option_id[i]|replace({'_': " "}) }}</a></li>
+							 {% set count = count + 1 %}
+							 {% else %}
+			             <li><a href="#{{ wk_mpfollowseller_other_option_id[i] }}" data-toggle="tab">{{ wk_mpfollowseller_other_option_id[i]|replace({'_': " "}) }}</a></li>
+							 {% endif %}
+						{% endif %}
+					{% endfor %}
+			</ul>
+		{% endif %}
+			 <div class="tab-content" style="overflow:auto">
+			    <div id="Top_Seller" class="tab-pane">
+						{% if Top_Seller_value is defined %}
+						{% for key, partner in Top_Seller_value %}
+						{% set addClass = 'col-lg-3 col-md-3 col-sm-6' %}
+						      <div class="product-layout product-grid col-lg-3 col-md-3 col-sm-6 col-xs-12">
+						        <div class="product-thumb">
+						          <br/>
+						          <div class="text-center">
+						            <a href="{{ partner.sellerHref }}"><img src="{{ partner.thumb }}" alt="{{ partner.name }}" title="{{ partner.name }}" class="img-circle" style="box-shadow:0px 0px 5px 2px #f1f1f1;"/></a>
+
+						            <div class="rating">
+													{% for i in 0..5 %}
+														{% if partner.rating < i %}
+							            <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-1x"></i></span>
+														{% else %}
+							            <span class="fa fa-stack"><i class="fa fa-star fa-stack-1x"></i><i class="fa fa-star-o fa-stack-1x"></i></span>
+													  {% endif %}
+												  {% endfor %}
+							          </div>
+
+						            <h4>
+						              {{ text_seller }}<span data-toggle="tooltip" title="{{ text_seller }}"><i class="fa fa-user"></i></span>
+						              <a href="{{ partner.sellerHref }}">{{ partner.displayName }}</a>
+						            </h4>
+
+						            <p>
+						              {{ text_from }}<span data-toggle="tooltip" title="{{ text_from }}"><i class="fa fa-home"></i></span>
+						              <b>{{ partner.country }}</b>
+						            </p>
+
+						            <p>
+						              {{ text_total_products }}
+						              <b>{{ partner.total_products }}</b>
+						            </p>
+
+						        	<!-- follow seller -->
+											    {% if customer_id is defined and module_wk_mpfollowseller_status and partner.customer_id != customer_id %}
+														{% if customerfollows[key] is defined and customerfollows[key] %}
+						                     <p><button class="btn btn-primary wk_follow_seller" id="{{ partner.customer_id }}" value="{{ key }}">{{ text_unfollow_seller }}</button></p>
+															{% else %}
+						                     <p><button class="btn btn-primary wk_follow_seller" id="{{ partner.customer_id }}" value="{{ key }}">{{ text_follow_seller }}</button></p>
+														{% endif %}
+													{% endif %}
+						          </div>
+						        </div>
+						      </div>
+						{% endfor %}
+						{% else %}
+						 <div class="text-center">{{ text_no_seller }}</div>
+						{% endif %}
+				    </div> <!-- tab-pane active -->
+
+				     <div id="Top_Followed_Seller" class="tab-pane">
+							 {% if Top_Followed_Seller_value is defined %}
+							 {% for key, partner in Top_Followed_Seller_value %}
+							 {% set addClass = 'col-lg-3 col-md-3 col-sm-6' %}
+						      <div class="product-layout product-grid col-lg-3 col-md-3 col-sm-6 col-xs-12">
+						        <div class="product-thumb">
+						          <br/>
+						          <div class="text-center">
+						            <a href="{{ partner.sellerHref }}"><img src="{{ partner.thumb }}" alt="{{ partner.name }}" title="{{ partner.name }}" class="img-circle" style="box-shadow:0px 0px 5px 2px #f1f1f1;"/></a>
+						            <h4>
+						              {{ text_seller }}<span data-toggle="tooltip" title="{{ text_seller }}"><i class="fa fa-user"></i></span>
+						              <a href="{{ partner.sellerHref }}">{{ partner.displayName }}</a>
+						            </h4>
+
+						            <p>
+						              {{ text_from }}<span data-toggle="tooltip" title="{{ text_from }}"><i class="fa fa-home"></i></span>
+						              <b>{{ partner.country }}</b>
+						            </p>
+
+						            <p>
+						              {{ text_total_followers }}
+						              <b>{{ partner.total_followers }}</b>
+						            </p>
+
+						            <p>
+						              {{ text_total_products }}
+						              <b>{{ partner.total_products }}</b>
+						            </p>
+
+						        	<!-- follow seller -->
+													{% if customer_id is defined and module_wk_mpfollowseller_status and partner.customer_id != customer_id %}
+														{% if high_followed_customerfollows[partner.customer_id] %}
+						                     <p><button class="btn btn-primary wk_follow_seller" id="{{ partner.customer_id }}" value="{{ partner.customer_id }}">{{ text_unfollow_seller }}</button></p>
+														{% else %}
+						                     <p><button class="btn btn-primary wk_follow_seller" id="{{ partner.customer_id }}" value="{{ partner.customer_id }}">{{ text_follow_seller }}</button></p>
+														{% endif %}
+													{% endif %}
+						          </div>
+						        </div>
+						      </div>
+						{% endfor %}
+						{% else %}
+						 <div class="text-center">{{ text_no_seller }}</div>
+						{% endif %}
+				     </div> <!-- tab-pane active -->
+				     <div id="Top_Products_Of_Followed_Seller" class="tab-pane">
+						 {% if Top_Products_Of_Followed_Seller_value is defined %}
+						 {% for product in Top_Products_Of_Followed_Seller_value %}
+						 {% if product.rating %}
+				      <div class="product-layout product-grid col-lg-3 col-md-3 col-sm-6 col-xs-12">
+				        <div class="product-thumb seller-thumb" id="{{ product.product_id }}">
+				          <div class="image"><a href="{{ product.href }}"><img src="{{ product.thumb }}" alt="{{ product.name }}" title="{{ product.name }}" class="img-responsive" /></a></div>
+				          <div>
+				            <div class="caption">
+				              <h4><a href="{{ product.href }}">{{ product.name }}</a></h4>
+											{% if product.rating %}
+				              <div class="rating">
+												{% for i in 0..5 %}
+												{% if product.rating < i %}
+				                <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
+												{% else %}
+				                <span class="fa fa-stack"><i class="fa fa-star fa-stack-2x"></i><i class="fa fa-star-o fa-stack-2x"></i></span>
+												{% endif %}
+												{% endfor %}
+				              </div>
+											{% endif %}
+											{% if product.price %}
+				              <p class="price">
+				                <span class="price-new">{{ product.price }}</span>
+												{% if product.tax %}
+				                <span class="price-tax">{{ text_tax }} {{ product.tax }}</span>
+												{% endif %}
+				              </p>
+											{% endif %}
+				            </div>
+				            <div class="button-group">
+				              <button type="button" onclick="cart.add('{{ product.product_id }}');"><i class="fa fa-shopping-cart"></i> <span class="hidden-xs hidden-sm hidden-md">{{ button_cart }}</span></button>
+				              <button type="button" data-toggle="tooltip" title="{{ button_wishlist }}" onclick="wishlist.add('{{ product.product_id }}');"><i class="fa fa-heart"></i></button>
+				              <button type="button" data-toggle="tooltip" title="{{ button_compare }}" onclick="compare.add('{{ product.product_id }}');"><i class="fa fa-exchange"></i></button>
+				            </div>
+				          </div>
+				        </div>
+				      </div>
+							{% endif %}
+							{% endfor %}
+							{% else %}
+				      <div class="text-center">
+				      	{{ text_no_products }}
+				      </div>
+							{% endif %}
+				     </div><!-- tab-pane-->
+
+				     <div id="Similar_Top_Products" class="tab-pane">
+						 {% if Similar_Top_Products_value is defined %}
+						 {% for product in Similar_Top_Products_value %}
+						 {% if product.rating %}
+				      <div class="product-layout product-grid col-lg-3 col-md-3 col-sm-6 col-xs-12">
+								<div class="product-thumb seller-thumb" id="{{ product.product_id }}">
+				          <div class="image"><a href="{{ product.href }}"><img src="{{ product.thumb }}" alt="{{ product.name }}" title="{{ product.name }}" class="img-responsive" /></a></div>
+				          <div>
+				            <div class="caption">
+				              <h4><a href="{{ product.href }}">{{ product.name }}</a></h4>
+				              {% if product.rating %}
+				              <div class="rating">
+												{% for i in 0..5 %}
+												{% if product.rating < i %}
+				                <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
+												{% else %}
+				                <span class="fa fa-stack"><i class="fa fa-star fa-stack-2x"></i><i class="fa fa-star-o fa-stack-2x"></i></span>
+												{% endif %}
+												{% endfor %}
+				              </div>
+											{% endif %}
+											{% if product.price %}
+				              <p class="price">
+				                <span class="price-new">{{ product.price }}</span>
+												{% if product.tax %}
+				                <span class="price-tax">{{ text_tax }} {{ product.tax }}</span>
+												{% endif %}
+				              </p>
+											{% endif %}
+				            </div>
+										<div class="button-group">
+				              <button type="button" onclick="cart.add('{{ product.product_id }}');"><i class="fa fa-shopping-cart"></i> <span class="hidden-xs hidden-sm hidden-md">{{ button_cart }}</span></button>
+				              <button type="button" data-toggle="tooltip" title="{{ button_wishlist }}" onclick="wishlist.add('{{ product.product_id }}');"><i class="fa fa-heart"></i></button>
+				              <button type="button" data-toggle="tooltip" title="{{ button_compare }}" onclick="compare.add('{{ product.product_id }}');"><i class="fa fa-exchange"></i></button>
+				            </div>
+				          </div>
+				        </div>
+				      </div>
+							{% endif %}
+							{% endfor %}
+							{% else %}
+				      <div class="text-center">
+				      	{{ text_no_products }}
+				      </div>
+							{% endif %}
+				     </div><!-- tab-pane-->
+			    </div> <!-- tab-content -->
+			</div>
+		 {% endif %}
+		</div>
+<script type="text/javascript">
+	/**
+ * [ajax for follow seller]
+ * @param  {[integer]} ){	var customer_id   [customer's id]
+ * @return {[type]}         [reload the page]
+ */
+{% if customer_id is defined and customer_id != '' %}
+		$(".wk_follow_seller").on('click',function(){
+
+			var customer_id = {{ customer_id }};
+			var seller_id = $(this).val();
+		   $.ajax({
+					url: '{{ follow_seller }}',
+					data: 'customer_id='+customer_id+'&seller_id='+seller_id,
+					type: 'post',
+					dataType: 'json',
+					success: function(json) {
+						if (json['success']) {
+
+							if(json['success']=='done'){
+		                      location.reload();
+		                     }
+						};
+					}
+				});
+
+		});
+{% endif %}
+
+$('#follow_seller_tabs a:first').tab('show');
+</script>

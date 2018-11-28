@@ -1,0 +1,884 @@
+<div id="product-product" class="">
+    
+    <div class="wrapper">
+    {% if products != '' %}
+    <div id="myModal_cart_recommended_product" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-body">
+                
+                {% set product_count = '0' %}
+                {% for product in products %}
+                
+                {% if product.product_id == '77' %}
+                    {% set product_selected_color = 'Black' %}
+                    {% set product_selected_div = 'Black_77' %}
+                {% elseif product.product_id == '73' %}
+                    {% set product_selected_color = 'Blue' %}
+                    {% set product_selected_div = 'Blue_73' %}
+                {% elseif product.product_id == '75' %}
+                    {% set product_selected_color = 'Pink' %}
+                    {% set product_selected_div = 'Pink_75' %}
+                {% elseif product.product_id == '76' %}
+                    {% set product_selected_color = 'White' %}
+                    {% set product_selected_div = 'White_76' %}
+                {% elseif product.product_id == '74' %}
+                    {% set product_selected_color = 'Red' %}
+                    {% set product_selected_div = 'Red_74' %}
+                {% else %}
+                    {% set product_selected_color = '' %}
+                    {% set product_selected_div = '' %}
+                {% endif %}
+                
+                {% set _show_row = 'display:none;' %}
+                {% if product_count == '0' %}
+                    {% set _show_row = 'display:block;' %}
+                {% endif %}
+                
+                <div class="container modal_container container_{{ product_selected_color }}" data-content-class="product_content_{{product_count}}" data-row-class="{{ product_selected_color }}"  style="{{_show_row}}">{{ column_left }}
+                    <!--<button type="button" class="close header_button" data-dismiss="modal" aria-hidden="true">&times;</button>-->
+                    <button type="button" class="close header_button" data-number="1" aria-hidden="true">&times;</button>
+                    <input type="hidden" name="product_selected_color" class="product_selected_color" value="{{product_selected_color}}"/>
+                    <input type="hidden" name="product_selected_div" class="product_selected_div" value="{{product_selected_div}}"/>
+                
+                {% if column_left and column_right %}
+                
+                    {% set class = 'col-md-6' %}
+                
+                {% elseif column_left or column_right %}
+                
+                    {% set class = 'col-md-9' %}
+                
+                {% else %}
+                
+                    {% set class = 'col-md-12' %}
+                
+                {% endif %}
+                
+                <div id="content" class="{{ class }}">
+                
+                    <div class="product-info">
+                    
+                        {{ content_top }}
+                    
+                        <div class="slider-and-right-desc"> 
+                        
+                            <div class="container_div"> 
+                            
+                                <div class="row_div"> 
+                                    {% if column_left or column_right %}
+                                    
+                                        {% set class = 'col-sm-6' %}
+                                    
+                                    {% else %}
+                                    
+                                        {% set class = 'col-sm-7' %}
+                                    
+                                    {% endif %}
+                                    
+                                    <div class="{{ class }}">
+                                    
+                                        {% set slider_margin_dog_collar = '' %}
+                                        {% if product.cart_recommended != '' %}
+                                            {% set slider_margin_dog_collar = 'slider_dog_collar' %}
+                                        {% endif %}
+                                        
+                                        <div id="myCarousel_{{product_count}}" class="{{ slider_margin_dog_collar }} myCarousel carousel slide" data-ride="carousel">
+        
+                                           <div class="carousel-inner"> 
+                                             {% if product.thumb or product.images %}
+                                                 {% if product.thumb %}
+                                                     <div class="item active">
+                                                        <img src="{{ product.thumb }}" title="{{ product.heading_title }}" alt="{{ product.heading_title }}" />
+                                                        <button type="button" data-toggle="tooltip" class="btn  btn-wishlist btn-default" title="{{ product.button_wishlist }}" onclick="wishlist.add('{{ product.product_id }}');"> <img src="{{ product.partner.favourite }}" /></button>
+                                                    </div>
+                                                 {% endif %}
+                                        
+                                                {% if product.images %}
+                                                      {% for image in product.images %}
+                                                          <div class="item"> <img src="{{ image.popup }}" title="{{ product.heading_title }}" alt="{{ product.heading_title }}" /> <button type="button" data-toggle="tooltip" class="btn  btn-wishlist btn-default" title="Add to fovourite" onclick="wishlist.add('{{ product.product_id }}');"><img src="{{ product.partner.favourite }}" /></button>
+                                                          </div>
+                                                      {% endfor %}
+                                                {% endif %}
+                                            {% endif %}
+                                
+                                            
+                                
+                                          </div>
+                            
+                                          <a class="left carousel-control" href="#myCarousel_{{product_count}}" data-slide="prev">
+                                
+                                              <span class="glyphicon glyphicon-chevron-left"></span>
+                                        
+                                              <span class="sr-only">Previous</span>
+                                    
+                                          </a>
+                            
+                                          <a class="right carousel-control" href="#myCarousel_{{product_count}}" data-slide="next">
+                                        
+                                            <span class="glyphicon glyphicon-chevron-right"></span>
+                                        
+                                            <span class="sr-only">Next</span>
+                                        
+                                          </a>
+                            
+                                      
+                                            {% if product.cart_recommended == '' %}
+                                                <ol class="carousel-indicators">
+                                                   {% if thumb %}
+                                                          <li data-target="#myCarousel" data-slide-to="0" class="active"><img src="{{ thumb }}" title="{{ heading_title }}" alt="{{ heading_title }}"  width="50" height="50" /></li>
+                                                          {% endif %}
+                                                    {% if images %}
+                                                          {% for image in images %}
+                                                         <li data-target="#myCarousel" data-slide-to="{{ image.countit }}" class=""><img src="{{ image.popup }}" title="{{ heading_title }}" alt="{{ heading_title }}"  width="50" height="50" /></li>
+                                                          {% endfor %}
+                                                    {% endif %}
+                                                  </ol>
+                                            {% else %}
+                                                <div class="custom-dog-collar-div">
+                                                    <table class="custom_dog_collar-image-table">
+                                                        <tbody>
+                                                            <tr>
+                                                                {% if product.rec_file_upload_1 != '' %}
+                                                                    {% set product_image_1 = product.rec_file_upload_1 %}
+                                                                {% else %}
+                                                                    {% set product_image_1 = product.thumb %}
+                                                                {% endif %}
+                                                                
+                                                                {% if product.rec_file_upload_2 != '' %}
+                                                                    {% set product_image_2 = product.rec_file_upload_2 %}
+                                                                {% else %}
+                                                                    {% set product_image_2 = product.thumb %}
+                                                                {% endif %}
+                                                                
+                                                                <td align="center" class="dog-collar collar-blue-full" style="background: url({{product_image_2}}) no-repeat; display: none;">
+                                                                    <div id="zoomer" rel="zoom-position:inner;zoom-fade:true">
+                                                                        <span class="collar-imgs" id="collar-imgs"></span> 
+                                                                    </div>
+                                                                </td>
+                                                                <td align="center" class="dog-collar collar-blue" style="background: url({{product_image_1}}) no-repeat;">
+                                                                    <div id="zoomer" rel="zoom-position:inner;zoom-fade:true">
+                                                                        <span class="collar-imgs" id="collar-imgs"></span> 
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            
+                                            {% endif %}
+                            
+                                        </div>
+                                    </div>
+                                
+                                    {% if column_left or column_right %}
+                                    
+                                        {% set class = 'col-sm-6' %}
+                                    
+                                    {% else %}
+                                    
+                                        {% set class = 'col-sm-5' %}
+                                    
+                                    {% endif %}
+                                
+                                    <div class="{{ class }}">
+                                    
+                                        <h1 class="heading_title">{{ product.heading_title }}</h1>
+                                    
+                                        {% if product.price %}
+                                        
+                                            <ul class="list-unstyled">
+                                            
+                                              {% if not product.special %}
+                                            
+                                                  <li>
+                                                    <h2 class="detail price-new">{{ product.price }}</h2>
+                                                    <input type="hidden" name="old_product_price" class="old_product_price" value="{{ product.price }}"/>
+                                                  </li>
+                                            
+                                              {% else %}
+                                              
+                                                  <li>
+                                                    <h2 class="detail price-new">{{ product.special }}</h2>
+                                                  </li>
+                                                  <li><span style="text-decoration: line-through;" class="special-price-add">{{ product.price }}</span></li>
+                                                  <input type="hidden" name="old_product_price" class="old_product_price" value="{{ product.special }}"/>
+                                              {% endif %}
+                                            
+                                              {% if product.tax %}
+                                            
+                                                <li>{{ text_tax }} {{ product.tax }}</li>
+                                            
+                                              {% endif %}
+                                            
+                                              {% if product.discounts %}
+                                            
+                                                  <li>
+                                                    <hr>
+                                                  </li>
+                                            
+                                                  {% for discount in product.discounts %}
+                                                    <li>{{ discount.quantity }}{{ text_discount }}{{ discount.price }}</li>
+                                                  {% endfor %}
+                                            
+                                              {% endif %}
+                                            
+                                            </ul>
+                                        
+                                        {% endif %}
+                                    
+                                        <div id="product" class="product_{{product_count}}"> 
+                                            {% if product.options %}
+                                                
+                                              <hr>
+                                            
+                                              <h4>{{ text_option }}</h4>
+                                              
+                                              {% for option in product.options %}
+                                            
+                                              {% if option.type == 'select' %}
+                                              
+                                                {% if option.name == 'Size' %}
+                                                    {% set new_select_class_1 = '_select_size_div' %}
+                                                    {% set new_select_class_2 = '_select_size' %}
+                                                {% else %}
+                                                    {% set new_select_class_1 = '_select_other_div' %}
+                                                    {% set new_select_class_2 = '_select_other' %}
+                                                {% endif %}
+                                                
+                                                {% set _color_class = '' %}
+                                                {%if option.name == 'Colour' %}
+                                                    {% set _color_class = 'select_color' %}
+                                                {% endif %}
+                                                
+                                                {% set _selected_color = '' %}
+                                                {% if selected_color != ''%}
+                                                    {% set _selected_color = selected_color %}
+                                                {% endif %}
+                                                
+                                                {% set cart_recommended_select = '' %}
+                                                {% if product.cart_recommended != '' %}
+                                                    {% set cart_recommended_select = 'cart_recommended_select' %}
+                                                {% endif %}                
+                                                
+                                                  <div class="form-group{% if option.required %} required {% endif %} {{new_select_class_1}} {{cart_recommended_select}}">
+                                                
+                                                    <label class="control-label" for="input-option{{ option.product_option_id }}">{{ option.name }}</label>
+                                                
+                                                    <select name="option[{{ option.product_option_id }}]" id="input-option{{ option.product_option_id }}" class="form-control select-size {{new_select_class_2}} {{_color_class}}">
+                                                
+                                                      <option value="">{{ text_select }}</option>
+                                                
+                                                      {% for option_value in option.product_option_value %}
+                                                        {% set is_selected = '' %}
+                                                        {% if option_value.name == selected_color %}
+                                                            {% set is_selected = 'selected=selected' %}
+                                                        {% endif %}
+                                                        
+                                                        {% set option_value_price = '' %}
+                                                        {% if option_value.price %}
+                                                          {% set option_value_price = option_value.price %}
+                                                        {% endif %}
+                                                        
+                                                          <option value="{{ option_value.product_option_value_id }}" {{is_selected}}">{{ option_value.name }}{% if option_value.price and option_value.price != '0.0000' %}({{ option_value.price_prefix }}{{ option_value.price }}){% endif %}</option>
+                                                
+                                                      {% endfor %}
+                                                
+                                                    </select>
+                                                {% if option.name  == 'Size' %}
+                                                    {% if product.size_guide  == '1' %}
+                                                    
+                                                        <div class="rulersize">
+                                                            <button type="button" class="btn btn-lg rsize slide-header">Size Guide</button>
+                                                        </div>
+                                                    {% endif %}
+                                                    <div class="slide-content" style="display: none;" role="dialog">
+                                                        <div class="modal-dialog">
+                                                            <!-- Modal content-->
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <!--<button type="button" class="close" data-dismiss="modal">&times;</button>-->
+                                                                    <button type="button" class="close" data-number="2">&times;</button>
+                                                                    <h3 class="modal-title">Size Guide</h3>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <p>
+                                                                        <img src="{{ product.partner.sizeguide }}" class="img-thumbnail" />
+                                                                    </p>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <!--<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>-->
+                                                                    <button type="button" class="btn btn-default" data-number="2">Close</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                                
+                                                </div>
+                                            
+                                              {% endif %}
+                                            <!-- Trigger the modal with a button -->
+                                            
+                                            <!-- Modal -->
+                                            
+                                            
+                                              {% if option.type == 'radio' %}
+                                            
+                                              <div class="form-group{% if option.required %} required {% endif %}">
+                                            
+                                                <label class="control-label">{{ option.name }}</label>
+                                            
+                                                <div id="input-option{{ option.product_option_id }}"> {% for option_value in option.product_option_value %}
+                                            
+                                                  <div class="radio">
+                                            
+                                                    <label>
+                                            
+                                                      <input type="radio" name="option[{{ option.product_option_id }}]" value="{{ option_value.product_option_value_id }}" />
+                                            
+                                                      {% if option_value.image %} <img src="{{ option_value.image }}" alt="{{ option_value.name }} {% if option_value.price %} {{ option_value.price_prefix }} {{ option_value.price }} {% endif %}" class="img-thumbnail" /> {% endif %}                  
+                                            
+                                                      {{ option_value.name }}
+                                            
+                                                      {% if option_value.price %}
+                                            
+                                                      ({{ option_value.price_prefix }}{{ option_value.price }})
+                                            
+                                                      {% endif %} </label>
+                                            
+                                                  </div>
+                                            
+                                                  {% endfor %} </div>
+                                            
+                                              </div>
+                                            
+                                              {% endif %}
+                                            
+                                              {% if option.type == 'checkbox' %}
+                                            
+                                                  <div class="form-group{% if option.required %} required {% endif %}">
+                                                    {% if option.name != 'Prices will not be shown on packing slip' %}
+                                                        <label class="control-label">{{ option.name }}</label>
+                                                    {% endif %}
+                                                    <div id="input-option{{ option.product_option_id }}"> 
+                                                        {% for option_value in option.product_option_value %}
+                                                    
+                                                          <div class="checkbox">
+                                                    
+                                                            <label>
+                                                    
+                                                                <input type="checkbox" name="option[{{ option.product_option_id }}][]" value="{{ option_value.product_option_value_id }}" />
+                                                    
+                                                                {% if option_value.image %} <img src="{{ option_value.image }}" alt="{{ option_value.name }} {% if option_value.price %} {{ option_value.price_prefix }} {{ option_value.price }} {% endif %}" class="img-thumbnail" /> {% endif %}
+                                                    
+                                                                {{ option_value.name }}
+                                                    
+                                                                {% if option_value.price %}
+                                                    
+                                                                    ({{ option_value.price_prefix }}{{ option_value.price }})
+                                                    
+                                                                {% endif %}
+                                                            </label>
+                                                            {% if option.name == 'Prices will not be shown on packing slip' %}
+                                                              <label style="font-size: 13px;" class="control-label">{{ option.name }}</label>
+                                                            {% endif %}
+                                                          </div>
+                                                    
+                                                          {% endfor %} 
+                                                    </div>
+                                                
+                                                  </div>
+                                            
+                                              {% endif %}
+                                            
+                                              {% if option.type == 'text' %}
+                                              
+                                                    {% set option_name = option.name %}
+                                                    {% set custom_attr = '' %}
+                                                    {% set cushion_class = '' %}
+                                                    {% set _max_length = '' %}
+                                                    {% set dog_name = option.value %}
+                                                    {% set is_dog_name_field = '' %}
+                                                    
+                                                    {% if product.cart_recommended == '1' %}
+                                                        <!--{% set custom_attr = 'onblur="countChars(event)" onkeypress="return remove_space(event)" onkeyup="countChars(event)"' %}-->
+                                                        {% set custom_attr = 'onkeypress="return remove_space(event)"'%}
+                                                    {% endif %}
+                                                    
+                                                    {% if option.name == 'Enter Your Dog Name'  %}
+                                                        {% set _max_length = 'maxlength="8"' %}
+                                                        {% set dog_name = _dog_name %}
+                                                        {% set is_dog_name_field = 'dog_name_field' %}
+                                                    {% endif %}
+                                            
+                                                  <div class="form-group{% if option.required %} required {% endif %}  {{is_dog_name_field}}">
+                                                  
+                                                     <label class="control-label" for="input-option{{ option.product_option_id }}">{{ option_name }}</label>
+                                                     <input type="text" name="option[{{ option.product_option_id }}]" {{custom_attr}} value="{{ dog_name }}" {{_max_length}} placeholder="{{ option.name }}" id="input-option{{ option.product_option_id }}" class="form-control dog_name" />
+                                                
+                                                  </div>
+                                            
+                                              {% endif %}
+                                            
+                                            
+                                              {% if option.type == 'file' %}
+                                            
+                                                  <div class="form-group{% if option.required %} required {% endif %}">
+                                                
+                                                    <label class="control-label">{{ option.name }}</label>
+                                                
+                                                    <button type="button" id="button-upload{{ option.product_option_id }}" data-loading-text="{{ text_loading }}" class="btn btn-default btn-block"><i class="fa fa-upload"></i> {{ button_upload }}</button>
+                                                
+                                                    <input type="hidden" name="option[{{ option.product_option_id }}]" value="" id="input-option{{ option.product_option_id }}" />
+                                                
+                                                  </div>
+                                            
+                                              {% endif %}
+                                            
+                                              {% if option.type == 'date' %}
+                                            
+                                                  <div class="form-group{% if option.required %} required {% endif %}">
+                                                
+                                                    <label class="control-label" for="input-option{{ option.product_option_id }}">{{ option.name }}</label>
+                                                
+                                                    <div class="input-group date">
+                                                
+                                                      <input type="text" name="option[{{ option.product_option_id }}]" value="{{ option.value }}" data-date-format="YYYY-MM-DD" id="input-option{{ option.product_option_id }}" class="form-control" />
+                                                
+                                                      <span class="input-group-btn">
+                                                
+                                                      <button class="btn btn-default" type="button"><i class="fa fa-calendar"></i></button>
+                                                
+                                                      </span></div>
+                                                
+                                                  </div>
+                                            
+                                              {% endif %}
+                                            
+                                              {% if option.type == 'datetime' %}
+                                            
+                                                  <div class="form-group{% if option.required %} required {% endif %}">
+                                                
+                                                    <label class="control-label" for="input-option{{ option.product_option_id }}">{{ option.name }}</label>
+                                                
+                                                    <div class="input-group datetime">
+                                                
+                                                      <input type="text" name="option[{{ option.product_option_id }}]" value="{{ option.value }}" data-date-format="YYYY-MM-DD HH:mm" id="input-option{{ option.product_option_id }}" class="form-control" />
+                                                
+                                                      <span class="input-group-btn">
+                                                
+                                                      <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+                                                
+                                                      </span></div>
+                                                
+                                                  </div>
+                                            
+                                              {% endif %}
+                                            
+                                              {% if option.type == 'time' %}
+                                            
+                                                  <div class="form-group{% if option.required %} required {% endif %}">
+                                                
+                                                    <label class="control-label" for="input-option{{ option.product_option_id }}">{{ option.name }}</label>
+                                                
+                                                    <div class="input-group time">
+                                                
+                                                      <input type="text" name="option[{{ option.product_option_id }}]" value="{{ option.value }}" data-date-format="HH:mm" id="input-option{{ option.product_option_id }}" class="form-control" />
+                                                
+                                                      <span class="input-group-btn">
+                                                
+                                                      <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+                                                
+                                                      </span></div>
+                                                
+                                                  </div>
+                                            
+                                              {% endif %}
+                                             
+                                            
+                                              {% if option.type == 'textarea' %}
+                                              
+                                                {% if qty_p_enable  == 1 %}
+                                                    <div class="form-group">
+                                                        <label class="control-label" for="input-quantity">Quantity</label>
+                                                          <select class="changeqty form-control" name="quantity" id="input-quantity">
+                                                        <option value="1">1</option>
+                                                        <option value="2">2</option>
+                                                        <option value="3">3</option>
+                                                        <option value="4">4</option>
+                                                        <option  value="5">5</option>
+                                                        <option  value="6">6</option>
+                                                        <option value="7">7</option>
+                                                        <option value="8">8</option>
+                                                        <option  value="9">9</option>
+                                                        <option  value="10">10</option>
+                                                                      
+                                                          </select>
+                                                   </div>
+                                                {% endif %}
+                                             
+                                                <div class="form-group{% if option.required %} required {% endif %}">
+                                                <textarea name="option[{{ option.product_option_id }}]" rows="5" placeholder="{{ option.name }}" id="input-option{{ option.product_option_id }}" class="form-control">{{ option.value }}</textarea>
+                                            
+                                              </div>
+                                            
+                                              {% endif %}
+                                            
+                                              {% endfor %}
+                                            
+                                              {% endif %}
+                                            
+                                              {% if product.recurrings %}
+                                            
+                                              <hr>
+                                            
+                                              <h3>{{ product.text_payment_recurring }}</h3>
+                                            
+                                              <div class="form-group required">
+                                            
+                                                <select name="recurring_id" class="form-control">
+                                            
+                                                  <option value="">{{ text_select }}</option>
+                                            
+                                                  {% for recurring in product.recurrings %}
+                                            
+                                                  <option value="{{ recurring.recurring_id }}">{{ recurring.name }}</option>
+                                            
+                                                  {% endfor %}
+                                            
+                                                </select>
+                                            
+                                                <div class="help-block" id="recurring-description"></div>
+                                            
+                                              </div>
+                                            
+                                              {% endif %}
+                                              {% if product.cart_recommended != '' %}
+                                                  {% if product.matching_leather != '' %}
+                                            
+                                                      <div class="form-group leather-lead-div">
+                                                            <input type="hidden" name="matching_leather_id" class="matching_leather_id" value="{{product.matching_leather.product_id}}" />
+                                                            <input type="hidden" name="matching_leather_price" class="matching_leather_price" value="{{product.matching_leather.price}}" />
+                                                            <input type="hidden" name="product_currency" class="product_currency" value="{{product.product_currency}}" />
+                                                          <label class="baby-pink-leather-lead" for="baby-pink-leather-lead">Add Matching Leather Lead? - {{product.matching_leather.n_price}}</label>
+                                                          <div>
+                                                             <label class="radio-inline">
+                                                                <input type="radio" name="inline_radio" class="inline_radio _yes" value="yes"/> Yes
+                                                                <span class="checkmark"></span>
+                                                             </label>
+                                                             <label class="radio-inline">
+                                                                <input type="radio" name="inline_radio" class="inline_radio _no" value="no" checked/> No
+                                                                <span class="checkmark"></span>
+                                                             </label>
+                                                             <span class="leather-popup"><span class="leather-link" data-toggle="modal" data-target="#leather-link-modal">see photo</span></span>
+                                                             <!-- Modal -->
+                                                            <div id="leather-link-modal" class="modal fade" role="dialog">
+                                                              <div class="modal-dialog">
+                                                                <!-- Modal content-->
+                                                                <div class="modal-content">
+                                                                  <div class="modal-body">
+                                                                    <!--<button type="button" class="close" data-dismiss="modal">&times;</button>-->
+                                                                    <button type="button" class="close" data-number="3">&times;</button>
+                                                                    <img src="{{product.matching_leather.thumb_image}}" class="img-responsive matching-img-popup" />
+                                                                  </div>
+                                                                </div>
+                                                            
+                                                              </div>
+                                                            </div>
+                                                          </div>
+                                                       </div>   
+                                                  {% endif %}
+                                              {% endif %}
+                                        
+                                              <div class="form-group">
+                                                <input type="hidden" name="product_id" value="{{ product.product_id }}" />
+                                                <br />
+                                                <div class="btn-group">
+                                                   <button type="button" id="button-cart" data-loading-text="{{ text_loading }}" class="btn btn-cart">{{ button_cart }}</button>
+                                                   <!--<button class="btn button_nothanks" data-dismiss="modal" aria-hidden="true">No Thanks</button>-->
+                                                   <button class="btn button_nothanks" data-number="1" aria-hidden="true">No Thanks</button>
+                                                </div>
+                                            </div>
+                                        
+                                        </div>
+                                    
+                                    </div>
+                                
+                                </div>
+                                
+                            </div>
+                        
+                        </div>
+                    
+                      </div>
+                        {{ column_right }}
+                    </div>
+                </div>
+                {% set product_count = product_count+1 %}
+             {% endfor %}  
+           </div>
+    </div>
+    <script>
+        $("button[data-number=1]").click(function(){
+            $('#myModal_cart_recommended_product').modal('hide');
+        });
+        
+        $("button[data-number=2]").click(function(){
+            $(".slide-content").stop().slideUp("fast");
+        });
+        
+        $("button[data-number=3]").click(function(){
+            $('#leather-link-modal').modal('hide');
+        });
+        
+        $('#myModal_cart_recommended_product').modal('show');
+        $(".slide-header,.slide-content").hover(function () {
+            $(".slide-content").stop().slideDown("slow");
+        }, function(){
+            $(".slide-content").stop().slideUp("fast");
+        });
+    </script>
+    
+    <script>
+    
+    function main_container_class(thisObj){
+        var _main_container = thisObj.parents('.modal_container');
+        var _main_container_class = _main_container.data('content-class');
+        $(_main_container).addClass(_main_container_class);
+        return _main_container_class = '.'+_main_container_class;
+    }
+    
+    $('._select_size_div.cart_recommended_select label').text('Select Size');
+    $('._select_size_div.cart_recommended_select').change(function(){
+        var n_main_container_class = main_container_class($(this));
+        $(n_main_container_class+' .leather-lead-div .inline_radio._no').prop('checked', true);
+    });
+    
+    var product_currency = $('.product_currency').val().trim();
+    var currency_symbol = '&pound;';
+    $('.leather-lead-div .inline_radio').change(function(){
+        var n_main_container_class = main_container_class($(this));
+        var matching_leather_id = $(n_main_container_class+' .leather-lead-div .matching_leather_id').val();
+        var product_price = $(n_main_container_class+' .old_product_price').val().trim();
+        var matching_leather_price = $(n_main_container_class+' .leather-lead-div .matching_leather_price').val().trim();
+        var n_product_price = product_price.substring(1);
+        
+        var matching_leather_val = $(this).val();
+        
+        if(matching_leather_val == 'yes'){
+            new_product_price = (parseFloat(n_product_price)+parseFloat(matching_leather_price)).toFixed(2);
+        }
+        else{
+            new_product_price = n_product_price;
+        }
+        
+        $(n_main_container_class+' .detail.price-new').html(currency_symbol+new_product_price);
+    });
+    
+    </script>
+    
+    <script>
+    $(".select_color option:contains(Blue)").attr('selected', 'selected');
+    $('.select_color').change(function(){
+        var n_main_container_class = main_container_class($(this));
+        var val_text = $('option:selected',this).text();
+        var dog_name = $(n_main_container_class+' .dog_name').val();
+        dog_name = dog_name.toLowerCase();
+        $('.dog_name').val(dog_name);
+        $(n_main_container_class).hide();
+        $(".select_color option").removeAttr('selected');
+        
+        if(val_text.trim() == 'Blue'){
+            $('.container_Blue').show();
+            $(".select_color option:contains(Blue)").attr('selected', 'selected');
+        }
+        else if(val_text.trim() == 'Black'){
+            $('.container_Black').show();
+            $(".select_color option:contains(Black)").attr('selected', 'selected');
+        }
+        else if(val_text.trim() == 'Pink'){
+            $('.container_Pink').show();
+            $(".select_color option:contains(Pink)").attr('selected', 'selected');
+        }
+        else if(val_text.trim() == 'white'){
+            $('.container_White').show();
+            $(".select_color option:contains(white)").attr('selected', 'selected');
+        }
+        else if(val_text.trim() == 'Red'){
+            $('.container_Red').show();
+            $(".select_color option:contains(Red)").attr('selected', 'selected');
+        }
+        else{
+            $('.container_Blue').show();
+            $(".select_color option:contains(Blue)").attr('selected', 'selected');
+        }
+         
+    });
+    
+    function remove_space(event){
+        var k = event ? event.which : window.event.keyCode;
+        if (k == 32 || $.isNumeric(event.key)){
+            return false;   
+        }
+    }
+    
+    var dog_name = $('.dog_name_1').val();
+    dog_name = dog_name.substr(0, 8);
+    $('.dog_name').val(dog_name);
+    
+    $('.dog_name').on('keyup blur', function(){
+        var dog_name = $(this).val();
+        dog_name = dog_name.substr(0, 8);
+        countChars(dog_name);
+    });
+    
+    countChars(dog_name);
+    function countChars(_dog_name)
+    {
+        if( _dog_name !== 'undefined'){
+            var dog_name = _dog_name;
+        }
+        else{
+            var dog_name = $('.dog_name').val();
+            dog_name = dog_name.substr(0, 8);
+        }
+        
+        var upper_dog_name = dog_name.toUpperCase();
+        $('._dog_name').html(upper_dog_name);
+        $('.enter_dog_name').val(upper_dog_name);
+        dog_name = dog_name.toLowerCase();
+        var count_length = dog_name.length;
+        var dog_name_arr = dog_name.split('');
+        if (count_length > 5) 
+        {
+            $('.dog-collar.collar-blue').hide();
+            $('.dog-collar.collar-blue-full').show();
+        }
+        else{
+            $('.dog-collar.collar-blue').show();
+            $('.dog-collar.collar-blue-full').hide();
+        }
+        var collar_letters_name = '';
+        for(i=0;i<count_length;i++){
+            var n_dog_name = dog_name_arr[i];
+            n_dog_name = n_dog_name.replace(/\s+/g,'');
+            if(n_dog_name != ''){
+                collar_letters_name += '<img alt="" src="./catalog/view/theme/pav_xstore/image/collar-alpha/diamond/'+n_dog_name+'.png">';    
+            }
+            else{
+                collar_letters_name += '&nbsp;';
+            }
+        }
+        $('.dog-collar #collar-imgs').html(collar_letters_name);
+    }
+    
+    </script>
+    
+    <script type="text/javascript"><!--
+    var matching_leather_id = $('.leather-lead-div .matching_leather_id').val();
+    
+    //$('#button-cart').on('click', function() {
+    $('.btn-cart').on('click', function() {
+        var _product = $(this).parents('#product').attr('class');
+        var _productClass = '.'+_product;
+      $.ajax({
+        url: 'index.php?route=checkout/cart/add',
+        type: 'post',
+        data: $(_productClass+' input[type=\'text\'], '+_productClass+' input[type=\'hidden\'], '+_productClass+' input[type=\'radio\']:checked,  '+_productClass+' input[type=\'checkbox\']:checked,  '+_productClass+' select,  '+_productClass+' textarea'),
+        dataType: 'json',
+        beforeSend: function() {
+          $('#button-cart').button('loading');
+        },
+
+        complete: function() {
+          $('#button-cart').button('reset');
+        },
+    
+        success: function(json) {
+          $('.alert-dismissible, .text-danger').remove();
+          $('.form-group').removeClass('has-error');
+
+          if (json['error']) {
+    
+            if (json['error']['option']) {
+    
+              for (i in json['error']['option']) {
+    
+                var element = $('#input-option' + i.replace('_', '-'));
+    
+                if (element.parent().hasClass('input-group')) {
+    
+                  element.parent().after('<div class="text-danger">' + json['error']['option'][i] + '</div>');
+    
+                } else {
+    
+                  element.after('<div class="text-danger">' + json['error']['option'][i] + '</div>');
+    
+                }
+    
+              }
+    
+            }
+    
+            if (json['error']['recurring']) {
+    
+              $('select[name=\'recurring_id\']').after('<div class="text-danger">' + json['error']['recurring'] + '</div>');
+    
+            }
+            // Highlight any found errors
+            $('.text-danger').parent().addClass('has-error');
+          }
+            if (json['success']) { 
+                
+                var matching_leather_val = $('.leather-lead-div .inline_radio:checked').val();
+                
+                if(matching_leather_val == 'yes'){
+                    
+                    var product_id = $('.leather-lead-div .matching_leather_id').val();
+                    var matching_leather_price = $('.matching_leather_price').val().trim();
+                    matching_leather_price = parseFloat(matching_leather_price).toFixed(2);
+                    var currency_symbol = '£';
+                    product_old_price = currency_symbol+matching_leather_price
+                    
+                    $.ajax({
+                        url: 'index.php?route=checkout/cart/add',
+                        type: 'post',
+                        data: {product_id:product_id,product_old_price:product_old_price},
+                        dataType: 'json',
+                        beforeSend: function() {
+                          $('#button-cart').button('loading');
+                        },
+                        complete: function() {
+                          $('#button-cart').button('reset');
+                        },
+                        success: function(json) {
+        
+                          $('.alert-dismissible, .text-danger').remove();
+                    
+                          $('.form-group').removeClass('has-error');
+                          if (json['success']) {
+                            window.location.href= "index.php?route=checkout/cart";  
+                          }
+                          
+                        },
+                        error: function(xhr, ajaxOptions, thrownError) {
+                            alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+                        }
+                    });
+                    
+                }
+                else{
+                    window.location.href= "index.php?route=checkout/cart";
+                }
+    
+            }
+    
+          },
+          error: function(xhr, ajaxOptions, thrownError) {
+              alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+          }
+      });
+    });
+    
+    //--></script> 
+    
+    {% endif %}   

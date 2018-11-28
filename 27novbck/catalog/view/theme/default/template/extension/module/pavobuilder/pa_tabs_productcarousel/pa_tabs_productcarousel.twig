@@ -1,0 +1,102 @@
+{% set id = random(1..9) + random() %}
+<div class="pavo-widget-tabs-productcarousel {{ settings.extra_class ? [ ' ', settings.extra_class ] | join() : '' }}">
+    <div class="tabs-productcarousel-content">
+        <ul class="nav nav-tabs" id="tabs-productcarousel{{id}}">
+            {% for tab, producttab in settings.producttabs %}
+            {% if (producttab.products is not empty) %}
+            <li ><a href="#tab-{{ tab }}{{ id }}" data-toggle="tab">{{ producttab.title }}</a></li>
+            {% endif %}
+            {% endfor %}
+        </ul>
+        <div class="tab-content">
+            {% for tab, producttab in settings.producttabs if (producttab.products is not empty) %}
+                {% if settings.product_grid_layout is empty %}
+                    <div class="tab-pane fade" id="tab-{{ tab }}{{ id }}">
+                        {% for product in producttab.products %}
+                          <div class="product-layout col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                            <div class="product-thumb transition">
+                              <div class="image"><a href="{{ product.href }}"><img src="{{ product.thumb }}" alt="{{ product.name }}" title="{{ product.name }}" class="img-responsive" /></a></div>
+                              <div class="caption">
+                                <h4><a href="{{ product.href }}">{{ product.name }}</a></h4>
+                                <p>{{ product.description }}</p>
+                                {% if product.rating %}
+                                <div class="rating">{% for i in 1..5 %}
+                                  {% if product.rating < i %} <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span> {% else %} <span class="fa fa-stack"><i class="fa fa-star fa-stack-2x"></i><i class="fa fa-star-o fa-stack-2x"></i></span> {% endif %}
+                                  {% endfor %}</div>
+                                {% endif %}
+                                {% if product.price %}
+                                <p class="price"> {% if not product.special %}
+                                  {{ product.price }}
+                                  {% else %} <span class="price-new">{{ product.special }}</span> <span class="price-old">{{ product.price }}</span> {% endif %}
+                                  {% if product.tax %} <span class="price-tax">{{ text_tax }} {{ product.tax }}</span> {% endif %} </p>
+                                {% endif %} </div>
+                              <div class="button-group">
+                                <button type="button" onclick="cart.add('{{ product.product_id }}');"><i class="fa fa-shopping-cart"></i> <span class="hidden-xs hidden-sm hidden-md">{{ button_cart }}</span></button>
+                                <button type="button" data-toggle="tooltip" title="{{ button_wishlist }}" onclick="wishlist.add('{{ product.product_id }}');"><i class="fa fa-heart"></i></button>
+                                <button type="button" data-toggle="tooltip" title="{{ button_compare }}" onclick="compare.add('{{ product.product_id }}');"><i class="fa fa-exchange"></i></button>
+                              </div>
+                            </div>
+                          </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="swiper-container tab-pane fade {% if producttab.products|length <= settings.item*settings.rows %}swiper-no-swiping{% endif %}" id="tab-{{ tab }}{{ id }}">
+                        <div class="swiper-wrapper">
+                          {% for product in producttab.products %}
+                            <div class="swiper-slide"><div class="product-layout">
+                              {% include ( settings.product_grid_layout ) %}
+                            </div></div>
+                          {% endfor %}
+                        </div>
+                        <div class="swiper-pager">
+                            <div class="swiper-button-next"></div>
+                            <div class="swiper-button-prev"></div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $('#tabs-productcarousel{{id}} a:first').tab('show');
+    });
+    var tabs = {};
+    $('#tabs-productcarousel{{id}} a').on('shown.bs.tab',function ( e ) {
+        e.preventDefault();
+        var id = e.currentTarget.hash.replace( '#tab-', '' );
+        if ( typeof tabs[id] !== 'undefined' || tabs[id] == true )
+            return;
+        $('#tab-'+id).swiper({
+            nextButton: '.swiper-button-next',
+            prevButton: '.swiper-button-prev',
+            pause: 'hover',
+            loop:{{ settings.loop == 'true' ? settings.loop : 'false' }},
+            autoplay:{{ settings.auto_play == "true" ? settings.auto_play_time : 'false' }},
+            slidesPerView: {{ settings.item ? settings.item : 2 }},
+            slidesPerColumn: {{ settings.rows ? settings.rows : 1 }},
+            noSwipingClass: 'swiper-no-swiping',
+            spaceBetween: 0,
+            {% if settings.loop != "true" %}
+            onReachEnd:function(swiper){
+                $('.swiper-button-next').one('click',function () {
+                    swiper.slideTo(0, 800, false);
+                });
+            },
+            {% endif %}
+            breakpoints: {
+                767: {
+                    slidesPerView: 1,
+                    noSwiping: false
+                },
+                991: {
+                    slidesPerView: 2,
+                    noSwiping: false
+                }, 
+            }
+        });
+        tabs[id] = true;
+        return false;
+    });
+</script>

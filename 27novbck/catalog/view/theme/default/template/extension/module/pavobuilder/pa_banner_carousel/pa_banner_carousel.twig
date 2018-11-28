@@ -1,0 +1,46 @@
+{% set id = random(1..9) + random() %}
+<div class="pavo-widget-banner-carousel {{ settings.extra_class ? [ ' ', settings.extra_class ] | join() : '' }}">
+	<div class="swiper-viewport">
+	  	<div id="banner-carousel{{id}}" class="swiper-container">
+	    	<div class="swiper-wrapper">{% for banner in settings.get_banners %}
+	      	<div class="swiper-slide text-center">{% if banner.link %}<a href="{{ banner.link }}"><img src="{{ banner.image }}" alt="{{ banner.title }}" class="img-responsive" /></a>{% else %}<img src="{{ banner.image }}" alt="{{ banner.title }}" class="img-responsive" />{% endif %}</div>
+	      {% endfor %}</div>
+	  	</div>
+	  	{% if settings.pagination == "true" %}
+	  	<div class="pagination"></div>
+	  	{% endif %}
+	  	<div class="swiper-pager">
+	    	<div class="swiper-button-next swiper-button-next{{id}}"></div>
+	    	<div class="swiper-button-prev swiper-button-prev{{id}}"></div>
+	  	</div>
+	</div>
+</div>
+<script>
+$('#banner-carousel{{id}}').swiper({
+	pause: 'hover',
+	slidesPerView: {{settings.item ? settings.item: 2}},
+	slidesPerColumn:{{ settings.rows ? settings.rows : 1 }},
+	pagination: '.pagination',
+	paginationClickable: true,
+	nextButton: '.swiper-button-next{{id}}',
+    prevButton: '.swiper-button-prev{{id}}',
+	loop:{{ settings.loop == 'true' ? settings.loop : 'false'}},
+    autoplay: {% if settings.auto_play == 'true' %}{{ settings.auto_play_time }}{% else %}0{% endif %},
+    spaceBetween: 0,
+    {% if settings.loop != "true" %}
+    onReachEnd:function(swiper){
+        $('.swiper-button-next').one('click',function () {
+            swiper.slideTo(0, 800, false);
+        });
+    },
+    {% endif %}
+    breakpoints: {
+        767: {
+            slidesPerView: {{settings.mobile ? settings.mobile : 1}},
+        },
+        991: {
+            slidesPerView: {{settings.table ? settings.table : 2}},
+        }, 
+    }
+});
+</script>

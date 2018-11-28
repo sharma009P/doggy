@@ -1,0 +1,236 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="pull-right">
+        <button type="submit" form="form-wkfollowseller" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-save"></i></button>
+        <a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a>
+      </div>
+      <h1>{{ heading_title }}</h1>
+      <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+        <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="container-fluid">
+    {% if error_warning %}
+    <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %}
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-pencil"></i> {{ text_edit }}</h3>
+      </div>
+      <div class="panel-body">
+        <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-wkfollowseller" class="form-horizontal">
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-status">{{ entry_status }}</label>
+            <div class="col-sm-10">
+              <select name="module_wk_mpfollowseller_status" id="input-status" class="form-control">
+                {% if module_wk_mpfollowseller_status %}
+                <option value="1" selected="selected">{{ text_enabled }}</option>
+                <option value="0">{{ text_disabled }}</option>
+                {% else %}
+                <option value="1">{{ text_enabled }}</option>
+                <option value="0" selected="selected">{{ text_disabled }}</option>
+                {% endif %}
+              </select>
+            </div>
+          </div>
+          <ul class="nav nav-tabs">
+           <li class="active"><a href="#tab_generalfields" data-toggle="tab">{{ tab_generalfields }}</a></li>
+           <li><a href="#tab_newsletter" data-toggle="tab">{{ tab_newsletter }}</a></li>
+           <li><a href="#tab_followed_seller_mail" data-toggle="tab">{{ tab_followed_seller_mail }}</a></li>
+           <li><a href="#tab_followed_customer_mail" data-toggle="tab">{{ tab_followed_customer_mail }}</a></li>
+           <li><a href="#tab_newsletter_info" data-toggle="tab">{{ tab_newsletter_info }}</a></li>
+         </ul>
+         <div class="tab-content">
+           <div class="tab-pane active" id="tab_generalfields">
+             <div class="form-group">
+              <label class="col-sm-2 control-label" for="input-status"><span data-toggle="tooltip" title="{{ help_seller_dashboard_status }}">{{ entry_seller_dashboard_status }}</span></label>
+                <div class="col-sm-10">
+                   <select name="wk_mpfollowseller_seller_dashboard_status" id="input-status" class="form-control">
+                     {% if wk_mpfollowseller_seller_dashboard_status %}
+                     <option value="1" selected="selected">{{ text_enabled }}</option>
+                     <option value="0">{{ text_disabled }}</option>
+                     {% else %}
+                     <option value="1">{{ text_enabled }}</option>
+                     <option value="0" selected="selected">{{ text_disabled }}</option>
+                     {% endif %}
+                   </select>
+                 </div>
+               </div>
+               <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-status"><span data-toggle="tooltip" title="{{ help_entry_customer_followseller_dashboard_status }}">{{ entry_customer_followseller_dashboard_status }}</span></label>
+                  <div class="col-sm-10">
+                     <select name="wk_mpfollowseller_customer_followseller_dashboard_status" id="input-status" class="form-control">
+                       {% if wk_mpfollowseller_customer_followseller_dashboard_status %}
+                       <option value="1" selected="selected">{{ text_enabled }}</option>
+                       <option value="0">{{ text_disabled }}</option>
+                       {% else %}
+                       <option value="1">{{ text_enabled }}</option>
+                       <option value="0" selected="selected">{{ text_disabled }}</option>
+                       {% endif %}
+                     </select>
+                   </div>
+                 </div>
+                 <div class="form-group">
+                   <label class="col-sm-2 control-label" for="input-status"><span data-toggle="tooltip" title="{{ help_seller_newsletter_set_status }}">{{ entry_seller_newsletter_set_status }}</span></label>
+                    <div class="col-sm-10">
+                       <select name="wk_mpfollowseller_customer_newsletter_set_status" id="input-status" class="form-control">
+                         {% if wk_mpfollowseller_customer_newsletter_set_status %}
+                         <option value="1" selected="selected">{{ text_enabled }}</option>
+                         <option value="0">{{ text_disabled }}</option>
+                         {% else %}
+                         <option value="1">{{ text_enabled }}</option>
+                         <option value="0" selected="selected">{{ text_disabled }}</option>
+                         {% endif %}
+                       </select>
+                     </div>
+                   </div>
+                   <div class="form-group">
+                     <label class="col-sm-2 control-label" for="other_options"><span data-toggle="tooltip" title="{{ help_other_options }}">{{ entry_other_options }}</span></label>
+                      <div class="col-sm-10">
+                        <select id="other_options" name="wk_mpfollowseller_other_option_id[]" size="10" class=" select multiselect form-control" multiple="multiple">
+                           {% if other_options is defined and other_options  %}
+                             {% for other_option in other_options %}
+                               {% if wk_mpfollowseller_other_option_id is defined and wk_mpfollowseller_other_option_id is iterable and other_option in wk_mpfollowseller_other_option_id %}
+                                 <option value="{{ other_option }}" selected="selected">{{ other_option|replace({'_': " "}) }}</option>
+                               {% else %}
+                                  <option value="{{ other_option }}">{{ other_option|replace({'_': " "}) }}</option>
+                               {% endif %}
+                             {% endfor %}
+                            {% endif %}
+                          </select>
+                      </div>
+                   </div>
+             </div>
+             <div class="tab-pane" id="tab_newsletter">
+               <div class="form-group">
+                 <label class="col-sm-2 control-label" for="input-status"><span data-toggle="tooltip" title="{{ help_seller_newsletter_status }}">{{ entry_seller_newsletter_status }}</span></label>
+                  <div class="col-sm-10">
+                    <select name="wk_mpfollowseller_seller_newsletter_status" id="input-status" class="form-control">
+                      {% if wk_mpfollowseller_seller_newsletter_status %}
+                      <option value="1" selected="selected">{{ text_enabled }}</option>
+                      <option value="0">{{ text_disabled }}</option>
+                      {% else %}
+                      <option value="1">{{ text_enabled }}</option>
+                      <option value="0" selected="selected">{{ text_disabled }}</option>
+                      {% endif %}
+                    </select>
+                  </div>
+               </div>
+               <div class="form-group">
+                 <label class="col-sm-2 control-label" for="seller_customergroup"><span data-toggle="tooltip" title="{{ help_seller_customergroup_status }}">{{ entry_seller_customergroup }}</span></label>
+                  <div class="col-sm-10">
+                    <select id="shipping_methods" name="wk_mpfollowseller_customergroup_id[]" size="10" class=" select multiselect form-control" multiple="multiple">
+                     {% if customer_groups is defined and customer_groups  %}
+                       {% for customer_group in customer_groups %}
+                         {% if wk_mpfollowseller_customergroup_id is defined and wk_mpfollowseller_customergroup_id is iterable and customer_group.customer_group_id in wk_mpfollowseller_customergroup_id %}
+                           <option value="{{ customer_group.customer_group_id }}" selected="selected">{{ customer_group.name }}</option>
+                         {% else %}
+                            <option value="{{ customer_group.customer_group_id }}">{{ customer_group.name }}</option>
+                         {% endif %}
+                       {% endfor %}
+                      {% endif %}
+                    </select>
+                  </div>
+               </div>
+               <div class="form-group">
+                  <label class="col-sm-2 control-label" for="input-subject"><span data-toggle="tooltip" title="{{ help_newsletter_subject }}">{{ entry_newsletter_subject }}</span></label>
+                  <div class="col-sm-10">
+                    <input type="text" id="input-subject" class="form-control" name="wk_mpfollowseller_newsletter_subject" value="{{ wk_mpfollowseller_newsletter_subject }}" />
+                  </div>
+                </div>
+                <div class="form-group">
+                   <label class="col-sm-2 control-label" for="input-newsletter-message"><span data-toggle="tooltip" title="{{ help_newsletter_message }}">{{ entry_newsletter_message }}</span></label>
+                   <div class="col-sm-10">
+                     <textarea id="input-newsletter-message" class="form-control summernote" name="wk_mpfollowseller_newsletter_message" rows="3">{{ wk_mpfollowseller_newsletter_message }}</textarea>
+                   </div>
+                 </div>
+             </div>
+             <div class="tab-pane" id="tab_newsletter_info">
+               <table class="table table-bordered table-hover">
+                 <thead>
+                 <tr>
+                   <td>{{ entry_for }}</td>
+                   <td>{{ entry_code }}</td>
+                 </tr>
+                 </thead>
+                 {% for help in mail_help %}
+                   <tr>
+                     <td>{{help|replace({'config': "Store"})|replace({'_': " "})}}</td>
+                     <td>{{ '{' ~ help ~ '}' }}</td>
+                   </tr>
+                 {% endfor %}
+               </table>
+             </div>
+             <div class="tab-pane" id="tab_followed_seller_mail">
+               <div class="form-group">
+                 <label class="col-sm-2 control-label" for="input-status"><span data-toggle="tooltip" title="{{ help_followed_mail_status }}">{{ entry_Followed_mail_status }}</span></label>
+                  <div class="col-sm-10">
+                    <select name="wk_mpfollowseller_followed_mail_status" id="input-status" class="form-control">
+                      {% if wk_mpfollowseller_followed_mail_status %}
+                      <option value="1" selected="selected">{{ text_enabled }}</option>
+                      <option value="0">{{ text_disabled }}</option>
+                      {% else %}
+                      <option value="1">{{ text_enabled }}</option>
+                      <option value="0" selected="selected">{{ text_disabled }}</option>
+                      {% endif %}
+                    </select>
+                  </div>
+               </div>
+               <div class="form-group">
+                  <label class="col-sm-2 control-label" for="input-subject"><span data-toggle="tooltip" title="{{ help_followed_mail_subject }}">{{ entry_Followed_mail_subject }}</span></label>
+                  <div class="col-sm-10">
+                    <input type="text" id="input-subject" class="form-control" name="wk_mpfollowseller_followed_mail_subject" value="{{ wk_mpfollowseller_followed_mail_subject }}" />
+                  </div>
+                </div>
+                <div class="form-group">
+                 <label class="col-sm-2 control-label" for="input-followed_mail-message"><span data-toggle="tooltip" title="{{ help_followed_mail_message }}">{{ entry_Followed_mail_message }}</span></label>
+                 <div class="col-sm-10">
+                   <textarea id="input-followed_mail-message" class="form-control summernote" name="wk_mpfollowseller_followed_mail_message" rows="3">{{ wk_mpfollowseller_followed_mail_message }}</textarea>
+                 </div>
+                </div>
+             </div>
+             <div class="tab-pane" id="tab_followed_customer_mail">
+               <div class="form-group">
+                 <label class="col-sm-2 control-label" for="input-status"><span data-toggle="tooltip" title="{{ help_followed_customer_mail_status }}">{{ entry_Followed_customer_mail_status }}</span></label>
+                  <div class="col-sm-10">
+                    <select name="wk_mpfollowseller_followed_customer_mail_status" id="input-status" class="form-control">
+                      {% if wk_mpfollowseller_followed_customer_mail_status %}
+                      <option value="1" selected="selected">{{ text_enabled }}</option>
+                      <option value="0">{{ text_disabled }}</option>
+                      {% else %}
+                      <option value="1">{{ text_enabled }}</option>
+                      <option value="0" selected="selected">{{ text_disabled }}</option>
+                      {% endif %}
+                    </select>
+                  </div>
+               </div>
+               <div class="form-group">
+                  <label class="col-sm-2 control-label" for="input-subject"><span data-toggle="tooltip" title="{{ help_followed_customer_mail_subject }}">{{ entry_Followed_customer_mail_subject }}</span></label>
+                  <div class="col-sm-10">
+                    <input type="text" id="input-subject" class="form-control" name="wk_mpfollowseller_followed_customer_mail_subject" value="{{ wk_mpfollowseller_followed_customer_mail_subject }}" />
+                  </div>
+                </div>
+                <div class="form-group">
+                   <label class="col-sm-2 control-label" for="input-followed-customer-mail-message"><span data-toggle="tooltip" title="{{ help_followed_customer_mail_message }}">{{ entry_Followed_customer_mail_message }}</span></label>
+                   <div class="col-sm-10">
+                     <textarea id="input-followed-customer-mail-message" class="form-control summernote" name="wk_mpfollowseller_followed_customer_mail_message" rows="3">{{ wk_mpfollowseller_followed_customer_mail_message }}</textarea>
+                   </div>
+                 </div>
+             </div>
+           </div>
+         </form>
+       </div>
+     </div>
+   </div>
+</div>
+{{ footer }}
+<script type="text/javascript" src="view/javascript/summernote/summernote.js"></script>
+<link href="view/javascript/summernote/summernote.css" rel="stylesheet" />
+<script src="view/javascript/summernote/webkul_summernote.js"></script>

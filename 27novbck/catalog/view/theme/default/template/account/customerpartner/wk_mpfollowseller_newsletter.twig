@@ -1,0 +1,68 @@
+{{ header }}
+<div class="container">
+  <ul class="breadcrumb">
+    {% for breadcrumb in breadcrumbs %}
+    <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+    {% endfor %}
+  </ul>
+  {% if error_warning %}
+  <div class="alert alert-danger alert-dismissible"><i class="fa fa-check-circle"></i> {{ error_warning }}</div>
+  {% endif %}
+  {% if success %}
+  <div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> {{ success }}</div>
+  {% endif %}
+  <div class="row">{{ column_left }}
+    {% if column_left and column_right %}
+    {% set class = 'col-sm-6' %}
+    {% elseif column_left or column_right %}
+    {% set class = 'col-sm-9' %}
+    {% else %}
+    {% set class = 'col-sm-12' %}
+    {% endif %}
+    <div id="content" class="{{ class }}">{{ content_top }}
+      <h1>
+        {{ heading_title }}
+        <div class="pull-right">
+           <a onclick="$('#form-newsletter').submit();" data-toggle="tooltip" class="btn btn-info" title="{{ button_save }}" id="submit"><i class="fa fa-save"></i></a>
+           <a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_back }}" class="btn btn-default" data-original-title="Cancel"><i class="fa fa-reply"></i></a>
+         </div>
+      </h1>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title"><i class="fa fa-list"></i> {{ heading_title }}</h3>
+        </div>
+        <div class="panel-body">
+          <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-newsletter">
+            <div class="form-group required">
+                <label class="col-sm-3 control-label" for="input-subject"><span data-toggle="tooltip" title="{{ help_newsletter_subject }}">{{ entry_newsletter_subject }}</span></label>
+                <div class="col-sm-9">
+                  <input type="text" id="input-subject" class="form-control" name="wk_mpfollowseller_newsletter_subject" value="{{ wk_mpfollowseller_newsletter_subject }}" />
+                </div>
+           </div> <br><br><br>
+           <div class="form-group">
+              <label class="col-sm-3 control-label" for="input-newsletter-message"><span data-toggle="tooltip" title="{{ help_newsletter_message }}">{{ entry_newsletter_message }}</span></label>
+              <div class="col-sm-9">
+                <textarea id="input-newsletter-message" class="form-control" name="wk_mpfollowseller_newsletter_message" rows="3">{{ wk_mpfollowseller_newsletter_message }}</textarea>
+              </div>
+          </div>
+          </form>
+          <div class="row">
+            <div class="col-sm-6 text-left">{{ pagination }}</div>
+            <div class="col-sm-6 text-right">{{ results }}</div>
+          </div>
+        </div>
+      </div>
+
+      {{ content_bottom }}</div>
+    {{ column_right }}</div>
+</div>
+<script src="//cdn.ckeditor.com/4.5.2/standard/ckeditor.js"></script>
+<style type="text/css">
+a.cke_button {
+height: 26px;
+}
+</style>
+<script type="text/javascript"><!--
+CKEDITOR.replace('input-newsletter-message');
+</script>
+{{ footer }}

@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+  <name>Facebook Pixel</name>
+  <code>fpixel</code>
+  <version>2.0.1</version>
+  <author>N2R TECHNOLOGIES</author>
+  <link>http://www.n2rtechnologies.com</link>
+  <!-- Catalog -->  
+  <file path="system/library/document.php">
+    <operation error="skip">
+      <search><![CDATA[private $description;]]></search>
+      <add position="after"><![CDATA[
+        public $pixel;
+      ]]></add>
+    </operation>
+    <operation error="skip">
+      <search><![CDATA[public function getDescription() {]]></search>
+      <add position="before"><![CDATA[
+        public function setPixel($pixel) {
+          $this->pixel = $pixel;
+        }
+        public function getPixel() {
+          return $this->pixel;
+        }
+      ]]></add>
+    </operation>
+  </file>
+  <file path="catalog/controller/common/header.php">
+    <operation error="skip">
+      <search><![CDATA[$data['lang'] = $this->language->get('code');]]></search>
+      <add position="after"><![CDATA[
+          $data['pixel'] = $this->document->getPixel();
+      ]]></add>
+    </operation>
+    <operation error="skip">
+      <search><![CDATA[$data['name'] = $this->config->get('config_name');]]></search>
+      <add position="after"><![CDATA[
+         $data['fbpixel_id'] = $this->config->get('module_fbpixel_id');
+         $data['fbpixel_status'] = $this->config->get('module_fbpixel_status');
+      ]]></add>
+    </operation>
+  </file>
+  <file path="catalog/view/theme/*/template/common/header.twig">
+    <operation error="skip">
+      <search><![CDATA[</head>]]></search>
+      <add position="before"><![CDATA[
+         {% if fbpixel_status %}
+            <!-- Facebook Pixel Code -->
+            <script>
+            !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+            n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+            n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+            t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+            document,'script','//connect.facebook.net/en_US/fbevents.js');
+
+            fbq('init', '{{ fbpixel_id }}');
+            fbq('track', "PageView");
+            {{ pixel }}
+
+            </script>
+            <noscript><img height="1" width="1" style="display:none"
+            src="https://www.facebook.com/tr?id={{ fbpixel_id }}&ev=PageView&noscript=1"
+            /></noscript>
+          <!-- End Facebook Pixel Code -->
+        {% endif %} 
+      ]]></add> 
+    </operation>
+  </file>
+  <file path="catalog/controller/product/product.php">
+    <operation>
+      <search><![CDATA[$this->document->setKeywords($product_info['meta_keyword']);]]></search>
+  		<add position="after"><![CDATA[
+  		$pixel = "fbq('track', 'ViewContent', {
+        content_ids: ['".$this->request->get['product_id']."'],
+        content_type: 'product',
+        value: ".$product_info['price'].",
+        currency: '".$this->session->data['currency']."'
+        });";
+
+      $this->document->setPixel($pixel);
+  		]]></add>
+    </operation>
+    <operation>
+      <search><![CDATA[$discounts = $this->model_catalog_product->getProductDiscounts($this->request->get['product_id']);]]></search>
+      <add position="before"><![CDATA[
+      if(!$data['special']){
+        $data['fbprice'] = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax'));
+      }else{
+        $data['fbprice'] = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $this->config->get('config_tax'));
+      }
+       $data['fbcurrency'] = $this->session->data['currency'];
+      ]]></add>
+    </operation>
+  </file>
+  <file path="catalog/view/theme/*/template/product/product.twig">
+    <operation error="skip">
+      <search><![CDATA[{{ footer }}]]></search>
+      <add position="before"><![CDATA[
+        <!-- Add Pixel Events to the button's click handler -->
+        <script type="text/javascript">
+          var button = document.getElementById('button-cart');
+          button.addEventListener(
+            'click', 
+            function() { 
+              fbq('track', 'AddToCart', {
+                content_name: '{{ heading_title }}', 
+                content_ids: ['{{ product_id }}'],
+                content_type: 'product',
+                value: {{ fbprice }},
+                currency: '{{ fbcurrency }}' 
+              });          
+            },
+            false
+          );
+      </script>
+      ]]></add>
+    </operation>
+  </file>
+  <file path="catalog/controller/checkout/success.php">
+    <operation>
+      <search><![CDATA[$this->cart->clear(); ]]></search>
+      <add position="before"><![CDATA[
+      $this->load->model('checkout/order');
+
+        $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
+
+        $prduct_ids = array();
+          foreach ($this->cart->getProducts() as $prducts) {
+            $prduct_ids[] = $prducts['product_id'];
+          }
+
+        $pixel = "fbq('track', 'Purchase', {
+        content_ids: [". implode(',', $prduct_ids) ."],
+        content_type: 'product',
+        value: '". $order_info['total'] ."',
+        currency: '". $this->session->data['currency'] ."'
+        });";
+
+      $this->document->setPixel($pixel);
+      ]]></add>
+    </operation>
+  </file>
+  <file path="catalog/controller/checkout/successpaypal.php">
+    <operation>
+      <search><![CDATA[$this->cart->clear();]]></search>
+      <add position="before"><![CDATA[
+      $this->load->model('checkout/order');
+
+        $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
+
+        $prduct_ids = array();
+          foreach ($this->cart->getProducts() as $prducts) {
+            $prduct_ids[] = $prducts['product_id'];
+          }
+
+        $pixel = "fbq('track', 'Purchase', {
+        content_ids: [". implode(',', $prduct_ids) ."],
+        content_type: 'product',
+        value: '". $order_info['total'] ."',
+        currency: '". $this->session->data['currency'] ."'
+        });";
+
+      $this->document->setPixel($pixel);
+      ]]></add>
+    </operation>
+  </file>
+  <file path="catalog/controller/checkout/successquare.php">
+    <operation>
+      <search><![CDATA[$this->cart->clear();]]></search>
+      <add position="before"><![CDATA[
+      $this->load->model('checkout/order');
+
+        $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
+
+        $prduct_ids = array();
+          foreach ($this->cart->getProducts() as $prducts) {
+            $prduct_ids[] = $prducts['product_id'];
+          }
+
+        $pixel = "fbq('track', 'Purchase', {
+        content_ids: [". implode(',', $prduct_ids) ."],
+        content_type: 'product',
+        value: '". $order_info['total'] ."',
+        currency: '". $this->session->data['currency'] ."'
+        });";
+
+      $this->document->setPixel($pixel);
+      ]]></add>
+    </operation>
+  </file>
+  <file path="catalog/controller/checkout/checkout.php">
+    <operation>
+      <search><![CDATA[$products = $this->cart->getProducts();]]></search>
+      <add position="after"><![CDATA[
+      $pixel = "fbq('track', 'InitiateCheckout');";
+      $this->document->setPixel($pixel);
+      ]]></add>
+    </operation>
+  </file>
+  <file path="catalog/controller/checkout/cart.php">
+    <operation>
+      <search><![CDATA[$products = $this->cart->getProducts();]]></search>
+      <add position="after"><![CDATA[
+      $pixel = "fbq('track', 'InitiateCheckout');";
+      $this->document->setPixel($pixel);
+      ]]></add>
+    </operation>
+  </file>
+  <!-- // Catalog -->
+</modification>

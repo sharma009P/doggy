@@ -1,0 +1,254 @@
+{% set id = random(1..9) + random() %}
+<div class="panel panel-default {{settings.layout}} {{ settings.extra_class ? [ ' ', settings.extra_class ] | join() : '' }}">
+    <div class="panel-body">
+        <ul class="nav nav-tabs {% if settings.category_status == "false" %}hidden{% endif %}" id="product-category{{id}}">
+            {% for category in settings.get_category  if ((category is not empty) and (category.products1 is not empty)) %}
+                <li ><a href="#tab-{{ category.category_id }}{{ id }}" data-target="#tab-{{ category.category_id }}{{ id }}, #tab-{{ category.category_id }}{{ id }}1,#tab-{{ category.category_id }}{{ id }}2" data-toggle="tab">{{ category.category_name}}</a></li>
+            {% endfor %}
+        </ul>
+        <div class="row">
+            {% if settings.status3 == "true" and settings.banner_type == "left" %}
+                <div class="tab-content col-md-3 col-sm-12" >
+                    {% for category in settings.get_category %}
+                        <div id="tab-{{ category.category_id }}{{ id }}2" class="tab-pane {% if settings.banner is empty %}fade{% endif %} banner-category">
+                            <div class="banner-image">
+                                {% if settings.banner is empty %}
+                                    <img src="{{ category.image }}" alt="{{ category.category_name }}" title="{{ category.category_name }}" class="img-responsive" />
+                                {% else %}
+                                    <img src="{{ settings.banner }}" alt="{{ settings.alt }}" title="{{ settings.alt }}" class="img-responsive" />
+                                {% endif %}
+                            </div>
+                            <div class="banner-profile">
+                                {% if settings.banner is empty %}
+                                    <div class="banner-title">
+                                        {{text_collection}} {{ category.category_name }}
+                                    </div>
+                                {% endif %}
+                                {% if settings.banner_title %}
+                                    <div class="banner-subtitle">
+                                        {{ settings.banner_title }}
+                                    </div>
+                                {% endif %}
+                                {% if settings.button_text %}
+                                    <div class="banner-button">
+                                        {% if settings.button_link %}
+                                            <a href="{{settings.server}}{{ settings.button_link }}" class="btn btn-link"> <span>{{ settings.button_text }}</span> </a>
+                                        {% else %}
+                                            <a href="{{ category.link }}" class="btn btn-link"> <span>{{ settings.button_text }}</span> </a>
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}    
+            <div class="tab-content {{ settings.extra_class1 ? [ ' ', settings.extra_class1 ] | join() : '' }} {% if settings.status2 == "false" and settings.status3 == "false" %}col-md-12 col-sm-12{% elseif settings.status2 == "false" or settings.status3 == "false" %}col-md-9 col-sm-12{% else %}col-md-6 col-sm-12{% endif %}" >
+                {% if settings.product_grid_layout is not empty %}<h4>{{settings.name_product1}}</h4>{% endif %}
+                {% for category in settings.get_category %}
+                    {% if settings.product_grid_layout is empty %}
+                        {% for product in category.products1 if (product is not empty) %}
+                          <div class="tab-pane fade product-layout col-lg-3 col-md-3 col-sm-6 col-xs-12" id="tab-{{ category.category_id }}{{ id }}">
+                            <div class="product-thumb transition">
+                                <div class="image"><a href="{{ product.href }}"><img src="{{ product.thumb }}" alt="{{ product.name }}" title="{{ product.name }}" class="img-responsive" /></a></div>
+                                <div class="caption">
+                                <h4><a href="{{ product.href }}">{{ product.name }}</a></h4>
+                                <p style="display:none" class="desc">{{ product.description }}</p>
+                                {% if product.rating %}
+                                <!--div class="rating">{% for i in 1..5 %}
+                                  {% if product.rating < i %} <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span> {% else %} <span class="fa fa-stack"><i class="fa fa-star fa-stack-2x"></i><i class="fa fa-star-o fa-stack-2x"></i></span> {% endif %}
+                                  {% endfor %}</div-->
+                                {% endif %}
+                                {% if product.price %}
+                                <p class="price"> {% if not product.special %}
+                                  {{ product.price }}
+                                  {% else %} <span class="price-new">{{ product.special }}</span> <span class="price-old">{{ product.price }}</span> {% endif %}
+                                  {% if product.tax %} <span class="price-tax">{{ text_tax }} {{ product.tax }}</span> {% endif %} </p>
+                                {% endif %} </div>
+                                <!--div class="button-group">
+                                <button type="button" onclick="cart.add('{{ product.product_id }}');"><i class="fa fa-shopping-cart"></i> <span class="hidden-xs hidden-sm hidden-md">{{ button_cart }}</span></button>
+                                <button type="button" data-toggle="tooltip" title="{{ button_wishlist }}" onclick="wishlist.add('{{ product.product_id }}');"><i class="fa fa-heart"></i></button>
+                                <button type="button" data-toggle="tooltip" title="{{ button_compare }}" onclick="compare.add('{{ product.product_id }}');"><i class="fa fa-exchange"></i></button>
+                              </div-->
+                            </div>
+                          </div>
+                        {% endfor %}
+                        {% else %}
+                        <div class="tab-pane fade swiper-container {% if category.products1|length <= settings.item1*settings.rows1 %}swiper-no-swiping{% endif %}" id="tab-{{ category.category_id }}{{ id }}">
+                            <div class="swiper-wrapper">
+                                {% for product in category.products1 if (product is not empty) %}
+                                    <div class="swiper-slide"><div class="product-layout">
+                                      {% include ( settings.product_grid_layout ) %}
+                                    </div></div>
+                                {% endfor %}
+                            </div>
+                            <div class="swiper-pager">
+                                <div class="swiper-button-next"></div>
+                                <div class="swiper-button-prev"></div>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            {% if settings.status2 == "true" %}
+                <div class="tab-content {{ settings.extra_class2 ? [ ' ', settings.extra_class2 ] | join() : '' }} col-md-3 col-sm-12">
+                    {% if settings.product_grid_layout is not empty %}<h4>{{settings.name_product2}}</h4>{% endif %}
+                    {% for category in settings.get_category %}
+                        {% if settings.product_grid_layout is empty %}
+                            {% for product in category.products2 if (product is not empty) %}
+                              <div class="tab-pane fade product-layout col-lg-3 col-md-3 col-sm-6 col-xs-12" id="tab-{{ category.category_id }}{{ id }}1">
+                                <div class="product-thumb transition">
+                                    <div class="image"><a href="{{ product.href }}"><img src="{{ product.thumb }}" alt="{{ product.name }}" title="{{ product.name }}" class="img-responsive" /></a></div>
+                                    <div class="caption">
+                                    <h4><a href="{{ product.href }}">{{ product.name }}</a></h4>
+                                    <p style="display:none" class="desc">{{ product.description }}</p>
+                                    {% if product.rating %}
+                                    <div class="rating">{% for i in 1..5 %}
+                                      {% if product.rating < i %} <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span> {% else %} <span class="fa fa-stack"><i class="fa fa-star fa-stack-2x"></i><i class="fa fa-star-o fa-stack-2x"></i></span> {% endif %}
+                                      {% endfor %}</div>
+                                    {% endif %}
+                                    {% if product.price %}
+                                    <p class="price"> {% if not product.special %}
+                                      {{ product.price }}
+                                      {% else %} <span class="price-new">{{ product.special }}</span> <span class="price-old">{{ product.price }}</span> {% endif %}
+                                      {% if product.tax %} <span class="price-tax">{{ text_tax }} {{ product.tax }}</span> {% endif %} </p>
+                                    {% endif %} 
+                                    </div>
+                                    <div class="button-group">
+                                    <button type="button" onclick="cart.add('{{ product.product_id }}');"><i class="fa fa-shopping-cart"></i> <span class="hidden-xs hidden-sm hidden-md">{{ button_cart }}</span></button>
+                                    <button type="button" data-toggle="tooltip" title="{{ button_wishlist }}" onclick="wishlist.add('{{ product.product_id }}');"><i class="fa fa-heart"></i></button>
+                                    <button type="button" data-toggle="tooltip" title="{{ button_compare }}" onclick="compare.add('{{ product.product_id }}');"><i class="fa fa-exchange"></i></button>
+                                  </div>
+                                </div>
+                              </div>
+                            {% endfor %}
+                            {% else %}
+                        <div class="tab-pane fade swiper-container {% if category.products2|length <= settings.item2*settings.rows2 %}swiper-no-swiping{% endif %}" id="tab-{{ category.category_id }}{{ id }}1">
+                            <div class="swiper-wrapper">
+                                {% for product in category.products2 if (product is not empty) %}
+                                    <div class="swiper-slide"><div class="product-layout">
+                                      {% include ( settings.product_grid_layout ) %}
+                                    </div></div>
+                                {% endfor %}
+                            </div>
+                            <div class="swiper-pager">
+                                <div class="swiper-button-next"></div>
+                                <div class="swiper-button-prev"></div>
+                            </div>
+                        </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+            {% if settings.status3 == "true" and settings.banner_type == "right" %}
+                <div class="tab-content col-md-3 col-sm-12" >
+                    {% for category in settings.get_category %}
+                        <div id="tab-{{ category.category_id }}{{ id }}2" class="tab-pane {% if settings.banner is empty %}fade{% endif %} banner-category">
+                            <div class="banner-image">
+                                {% if settings.banner is empty %}
+                                    <img src="{{ category.image }}" alt="{{ category.category_name }}" title="{{ category.category_name }}" class="img-responsive" />
+                                {% else %}
+                                    <img src="{{ settings.banner }}" alt="{{ settings.alt }}" title="{{ settings.alt }}" class="img-responsive" />
+                                {% endif %}
+                            </div>
+                            <div class="banner-profile">
+                                <div class="banner-title">
+                                    {{text_collection}} {{ category.category_name }}
+                                </div>
+                                {% if settings.banner_title %}
+                                    <div class="banner-subtitle">
+                                        {{ settings.banner_title }}
+                                    </div>
+                                {% endif %}
+                                {% if settings.button_text %}
+                                    <div class="banner-button">
+                                        {% if settings.button_link %}
+                                            <a href="{{settings.server}}{{ settings.button_link }}" class="btn btn-link"> <span>{{ settings.button_text }}</span> </a>
+                                        {% else %}
+                                            <a href="{{ category.link }}" class="btn btn-link"> <span>{{ settings.button_text }}</span> </a>
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+$(function () {
+    $('#product-category{{id}} a:first').tab('show');
+});
+</script>
+{% if settings.product_grid_layout is not empty %}
+<script type="text/javascript">
+var tabs = {};
+$('#product-category{{id}} a').on('shown.bs.tab',function ( e ) {
+    e.preventDefault();
+    var id = e.currentTarget.hash.replace( '#tab-', '' );
+    if ( typeof tabs[id] !== 'undefined' || tabs[id] == true )
+        return;
+    $('#tab-'+id).swiper({
+        nextButton: '.swiper-button-next',
+        prevButton: '.swiper-button-prev',
+        pause: 'hover',
+        loop:{{ settings.loop1 == "true" ? "true" : 'false' }},
+        autoplay:{{ auto_play1 == "true" ? settings.auto_play_time1 : 'false' }},
+        slidesPerView: {{ settings.item1 ? settings.item1 : 2 }},
+        slidesPerColumn: {{ settings.rows1 ? settings.rows1 : 1 }},
+        noSwipingClass: 'swiper-no-swiping',
+        spaceBetween: 0,
+        {% if settings.loop1 != "true" %}
+        onReachEnd:function(swiper){
+            $('.swiper-button-next').one('click',function () {
+                swiper.slideTo(0, 800, false);
+            });
+        },
+        {% endif %}
+        breakpoints: {
+            767: {
+                slidesPerView: 1,
+                noSwiping: false
+            },
+            991: {
+                slidesPerView: 2,
+                noSwiping: false
+            }, 
+        }
+    });
+    $('#tab-'+id+1).swiper({
+        nextButton: '.swiper-button-next',
+        prevButton: '.swiper-button-prev',
+        pause: 'hover',
+        loop:{{ settings.loop2 == "true" ? "true" : 'false' }},
+        autoplay:{{ auto_play2 == "true" ? settings.auto_play_time2 : 'false' }},
+        slidesPerView: {{ settings.item2 ? settings.item2 : 2 }},
+        slidesPerColumn: {{ settings.rows2 ? settings.rows2 : 1 }},
+        noSwipingClass: 'swiper-no-swiping',
+        spaceBetween: 0,
+        {% if settings.loop2 != "true" %}
+        onReachEnd:function(swiper){
+            $('.swiper-button-next').one('click',function () {
+                swiper.slideTo(0, 800, false);
+            });
+        },
+        {% endif %}
+        breakpoints: {
+            767: {
+                slidesPerView: 1,
+                noSwiping: false
+            },
+            991: {
+                slidesPerView: 2,
+                noSwiping: false
+            }, 
+        }
+    });
+
+    tabs[id] = true;
+    return false;
+});
+</script>
+{% endif %}

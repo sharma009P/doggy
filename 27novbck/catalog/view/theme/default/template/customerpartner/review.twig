@@ -1,0 +1,41 @@
+{% if reviews %}
+{% for review in reviews %}
+  <div class="review-container">
+ <div class="review-container-custom"> <div class="author-thumbs"><img src="https://www.etsy.com/images/avatars/default_avatar_75x75.png" width="48" height="48" class="circle float-right" alt="judy321"> </div>
+    <div class="flag-body-des"><div class="reviewer-name">
+      <span><i class="fa fa-user"></i>{{ review['author'] }}</span>
+
+      <span><i class="fa fa-calendar"></i>{{ review['date_added'] }}</span>
+    </div>
+
+    <div class="rating">
+      <div class="review-rating">
+        <div class="text-container">
+          {{ text_rating ~ ' :  ' }}
+        </div>
+        <div class="rating-container">
+          {% for i in 1..5 %}
+            {% if i <= review['rating'] %}
+              <span class="fa fa-stack"><i class="fa fa-star fa-stack-2x"></i></span>
+            {% else %}
+                <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <div class="review-content">
+      <div class="text-container">
+        <a href="{{ review['href'] }}" target="_blank">{{ review['name'] }}</a>
+      </div>
+      <div class="inner-des-custom-review">
+       <img src="{{ review['thumb'] }}" > <p>{{ review['text'] }}</p>
+      </div>
+    </div>
+  </div></div></div>
+  {% endfor %}
+  <div class="text-right">{{ pagination }}</div>
+  {% else %}
+  <div class="mp-no-location-found text-danger">{{ text_no_reviews}}</div>
+  {% endif %}

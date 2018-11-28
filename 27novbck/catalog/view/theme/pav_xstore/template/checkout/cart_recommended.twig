@@ -1,0 +1,156 @@
+<!--<div class="col-nopadding">-->
+<style>
+      .footer-menu {
+                display: none;
+            }
+            .footer_terms {
+                  display: none;
+            }
+</style>
+<div>
+  <h3>Treat <span class="_dog_name"></span> to a personalised dog collar</h3>
+  <div class="row">
+    {% set i = 1 %}
+   {% for product in products %}
+    <div class="product-layout col-lg-2 col-md-2 col-sm-4 col-xs-6">
+        {% set product_href = product.href %}
+        
+      <div class="product-thumb transition">
+            
+<!--        <div class="image"><a href="{{ product.href }}"><img src="{{ product.thumb }}" alt="{{ product.name }}" title="{{ product.name }}" class="img-responsive" /></a></div>-->
+        <a href="{{product_href}}" class="product_n_href">
+            <table class="cart_recommended-image-table">
+                <tbody>
+                    <tr>
+                        {% if product.rec_file_upload_1 != '' %}
+                            {% set product_image_1 = product.rec_file_upload_1 %}
+                        {% else %}
+                            {% set product_image_1 = product.thumb %}
+                        {% endif %}
+                        
+                        {% if product.rec_file_upload_2 != '' %}
+                            {% set product_image_2 = product.rec_file_upload_2 %}
+                        {% else %}
+                            {% set product_image_2 = product.thumb %}
+                        {% endif %}
+                        
+                        <td align="center" class="dog-collar collar-blue-full" style="background: url({{product_image_2}}) no-repeat; display: none;">
+                            <div id="zoomer" rel="zoom-position:inner;zoom-fade:true">
+                                <span class="collar-imgs" id="collar-imgs"></span> 
+                            </div>
+                        </td>
+                        <td align="center" class="dog-collar collar-blue" style="background: url({{product_image_1}}) no-repeat;">
+                            <div id="zoomer" rel="zoom-position:inner;zoom-fade:true">
+                                <span class="collar-imgs" id="collar-imgs"></span> 
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </a>
+        <div class="product-meta clearfix">
+          <div class="caption">
+            <h4 class="name"><a href="{{ product_href }}">{{ product.name }}</a></h4>
+            <h5>
+                {% if product.front_company_name %}
+                    by {{ product.front_company_name }}
+                {% else %}   
+                    by {{product.sellername}}
+                {% endif %}
+            </h5>
+            <div class="group-action">
+              {% if product.price %}
+              <div class="price_div">
+                {% if not product.special %}
+                <span class="price-new">{{ product.price }}</span>
+                {% else %}
+                <span class="price-new">{{ product.special }}</span> <span class="price-old">{{ product.price }}</span>
+                {% endif %}
+              </div>
+              {% endif %}
+            </div>
+            {% if product.rating %}
+                
+                 <div class="rating-custom">
+                    {% for i in 1..5 %} 
+
+                        {% if product.rating < i %} <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-1x"></i></span> {% else %} <span class="fa fa-stack"><i class="fa fa-star fa-stack-1x"></i><i class="fa fa-star-o fa-stack-1x"></i></span> {% endif %}
+            
+                  {% endfor %}
+                  <span class="total_ratings">({{product.reviews}})</span>
+                 </div>
+            {% endif %}
+          </div>
+        </div>
+        <!--<div class="custom_add_to_cart">
+            <a href="{{ product_href }}" class="btn button-cart">Buy Now</a>
+        </div>-->
+        
+      </div>
+      
+    </div>
+        {% if(i%3 == 0)  %}
+            <div class="visible-sm clearfix"></div>
+        {% endif %}
+        {% if(i%2 == 0)  %}
+            <div class="visible-xs clearfix"></div>
+        {% endif %}
+        {% set i = i+1 %}
+    {% endfor %}
+  </div>
+</div>
+
+<script type="text/javascript">
+
+countChars();
+function countChars()
+{
+    if($('input').hasClass('dog_name_1')){
+        var dog_name = $('.dog_name_1').val();
+        dog_name = dog_name.substr(0, 8);
+        var upper_dog_name = dog_name.toUpperCase();
+        $('._dog_name').html(upper_dog_name);
+        $('.enter_dog_name').val(upper_dog_name);
+        dog_name = dog_name.toLowerCase();
+        var count_length = dog_name.length;
+        var dog_name_arr = dog_name.split('');
+        if (count_length > 5) 
+        {
+            $('.dog-collar.collar-blue').hide();
+            $('.dog-collar.collar-blue-full').show();
+        }
+        else{
+            $('.dog-collar.collar-blue').show();
+            $('.dog-collar.collar-blue-full').hide();
+        }
+        var collar_letters_name = '';
+        for(i=0;i<count_length;i++){
+            var n_dog_name = dog_name_arr[i];
+            n_dog_name = n_dog_name.replace(/\s+/g,'');
+            if(n_dog_name != ''){
+                collar_letters_name += '<img alt="" src="./catalog/view/theme/pav_xstore/image/collar-alpha/diamond/'+n_dog_name+'.png">';    
+            }
+            else{
+                collar_letters_name += '&nbsp;';
+            }
+        }
+        $('.dog-collar #collar-imgs').html(collar_letters_name);
+        //selector_class('.button-cart',dog_name);
+        selector_class('.product_n_href',dog_name);
+        selector_class('.name a',dog_name);
+    }
+    else{
+        $('.cart_recommended').html('');
+        $('.cart_recommended').hide();
+    }
+    
+}
+
+function selector_class(selector_class,dog_name){
+    $(selector_class).each(function(){
+      var custom_href = $(this).attr('href')+'&dog_name='+dog_name;
+      $(this).attr('href',custom_href);
+    })
+}
+
+</script>

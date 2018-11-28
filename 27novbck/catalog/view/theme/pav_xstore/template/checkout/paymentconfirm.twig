@@ -1,0 +1,7 @@
+{% if not redirect %}
+{{ payment }}
+{% else %} 
+<script type="text/javascript">
+location = '{{ redirect }}';
+</script> 
+{% endif %} 

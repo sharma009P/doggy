@@ -1,0 +1,178 @@
+<script type="text/javascript" src="catalog/view/javascript/wk_summernote/summernote.js"></script>
+<link rel="stylesheet" type="text/css" href="catalog/view/javascript/wk_summernote/summernote.css">
+<form method="POST" onsubmit="return sendMail()" id="contactform" enctype="multipart/form-data">
+  <div id="seller-contact">
+    <div class="form-group">
+      <input type="hidden" name="id" value="{{id}}">
+      <label>{{text_from}}</label>
+      <input type="text" disabled="" readonly="" value="{{from}}" class="form-control" />
+      <input type ="hidden" name="from" value="{{from}}" />
+    </div>
+    <div class="form-group hide">
+     <label>{{text_to}}</label>
+     <input type="text" disabled="" readonly="" value="{{to}}" class="form-control" />
+     <input type ="hidden" name="to" value="{{to}}" />
+    </div>
+    <div class="form-group">
+     <label>{{text_subject}}</label>
+     <input type="text"  name="subjectContact" value="" class="form-control" />
+   </div>
+   <div class="form-group">
+     <textarea id="body" name="messageContact"></textarea>
+   </div>
+  <div class="form-group">
+    <div class="form-group fileDiv" style="display:inline-block">
+      <label class="attach-file pointer" name="upload_files[]">
+        <i class="fa fa-upload"></i>
+        <input type="file" name='file[]' id="files" style="display:none"  onchange="validate_fileupload(this);"><i class="fa fa-times remove-file pointer"></i>
+      </label>
+   </div>
+    <span id="addFile" class="label-right pointer">+ {{text_attach_another}}</span>
+    </div>
+  </div>
+  <div style="margin-left: 50%;">
+  <button type="Submit" class="btn btn-primary">{{text_send}}</button>
+  </div>
+</form>
+<script type="text/javascript">
+$(document).ready(function() {
+  $('#body').summernote({
+    height: 300,
+    callbacks: {
+      onImageUpload: function(files, editor, welEditable) {
+        sendFile(files[0], this);
+      }
+     }
+  });
+});
+function sendFile(file, el) {
+  data = new FormData();
+  data.append("file", file);
+  $.ajax({
+        data: data,
+        type: "POST",
+        url: "index.php?route=customerpartner/profile/upload",
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function(url) {
+            $(el).summernote('editor.insertImage', url);
+          }
+      });
+}
+</script>
+<style type="text/css">
+  label.attach-file {
+    display: inline-block;
+    width: 65px;
+    height: 65px;
+    background: #F1F1F1;
+    border: 1px dashed #DDD;
+    border-radius: 5px;
+    text-align: center;
+    line-height: 50px;
+    overflow: hidden;
+     background-image:url('');
+    background-size:cover;
+    background-position: center;
+    cursor: pointer;
+}
+.label-right {
+    display: inline-block;
+    text-align: center;
+    vertical-align: top;
+    margin: 22px 10px;
+    color: #325896;
+    font-weight: 600;
+}
+.remove-file{
+  margin-left: 10px;
+    position: absolute;
+    display: none;
+}
+</style>
+<script type="text/javascript">
+    var limit=1;
+  var max = '{{max}}';
+  $('#addFile').on('click',function(){
+    if(limit<max){
+      html='';
+    html += '<label class="attach-file pointer attach"  style="margin-left: 5px; margin-right: 5px;"><i class="fa fa-upload"></i><input type="file" name="file[]"  class="files" style="display:none"  onchange="validate_fileupload(this);"><i class="fa fa-times remove-file pointer"></i></label>';
+    $(this).prev().append(html);
+    $(this).removeAttr('id');
+    } else {
+      alert("{{text_max_limit}}"+max);
+    }
+  });
+function validate_fileupload(thisthis)
+{
+  var size=thisthis.files[0].size/1000;
+    var maxsize = {{size}};
+    var allowed_extensions ={{extension|json_encode()}};
+    if(thisthis.type == 'file') {
+    fileName = thisthis.value;
+    var file_extension = fileName.split('.').pop();
+    for(var i = 0; i <= allowed_extensions.length && limit<=max; i++)
+    {
+        if(allowed_extensions[i]==file_extension && size<maxsize)
+        {
+            var getImagePath = URL.createObjectURL(thisthis.files[0]);
+            $(thisthis).parent().css('background-image', 'url(' + getImagePath + ')');
+             $(thisthis).parent().append(file_extension);
+             limit++;
+            return true;
+        }
+    }
+  }
+  if(limit>max)
+    alert('{{text_max_file}}'+max);
+  else
+    alert("{{text_invalid}}");
+  thisthis.value="";
+    return false;
+}
+$(document.body).on('click','.remove-file',function(event){
+  event.preventDefault();
+ $(this).parent().remove();
+  });
+$(document.body).on('mouseenter','.attach-file',function(){
+  $(this).children().last().css("display","inline-block");
+});
+$(document.body).on('mouseleave','.attach-file',function(){
+  $(this).children().last().css("display","none");
+});
+function sendMail() {
+  $('textarea[name="messageContact"]').val($('textarea[name="messageContact"]').code());
+  var formData = new FormData($('form#contactform')[0]);
+//console.log($('textarea[name="message"]').val());
+   $.ajax({
+     url : '{{action}}',
+     data : formData,
+     async:false,
+     cache:false,
+     contentType:false,
+     processData:false,
+     type: "post",
+     dataType: 'json',
+     success : function(json) {
+      if(json['error']) {
+        for(var i = 0 ;i<json['error'].length;i++) {
+          $('<div class="alert alert-danger">'+json['error'][i]+'</div>').prependTo('#seller-contact').fadeOut(50000,function(){
+            $(this).remove();
+          })
+        }
+      } else if(json['success']) {
+        $('<div class="alert alert-success">'+json['success']+'</div>').prependTo('#seller-contact').fadeOut(30000,function(){
+          $(this).remove();
+        });
+        $('form#contactform input[name="subjectContact"]').val('');
+        $('.fileDiv label input[type="file"]').val('');
+        $('.fileDiv label').css('background-image','');
+        $('.fileDiv label').not($('.fileDiv :first')).remove();
+        $('textarea[name="messageContact"]').summernote("reset");
+      }
+     }
+   })
+   return false;
+}
+</script>

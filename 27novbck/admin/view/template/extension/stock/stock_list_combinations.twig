@@ -1,0 +1,427 @@
+{{ header }}{{ column_left }}
+
+<div id="content">
+	<style type = "text/css" scoped>
+    	.product-row {
+    		background-color: #1e91cf; color: #fff; font-weight: bold;	
+    	}
+    	.browse-icon {
+    		border: 1px solid #1978ab; border-radius: 3px; padding:1px 5px; margin: 0px 3px; color:#fff;	
+    	}
+    	.save-icon {
+			border: 1px solid #d6bfa9; border-radius: 3px; background-color:#ffa54d; display:none; padding:0px 5px; color:#fff; margin-right: 5px;
+    	}
+    	.cancel-icon {
+    		border: 1px solid #d6bfa9; border-radius: 3px; background-color:#ffa54d; display:none; padding:0px 4px; color:#fff; margin-right: 5px;
+    	}
+    	.edit-icon {
+    		padding:0px 5px; color:#fff;
+    	}
+    	.load-icon {
+    		color:#fff; font-size: 14px;
+    	}
+    	.combinations-td {
+    		padding: 5px; /*10px;*/
+    	}
+    	.combinations-table > thead > tr {
+    		background-color: #e2f2f9 !important;
+    	}
+
+    	.combinations-table {
+    		/*border:0px; padding:0px; margin:0px;*/
+    		margin-bottom: 0px;
+    	}
+    	.combinations-table td {
+    		/*padding:4px !important;*/
+    	}
+    	.combinations-table input[type="text"] {
+    		/*border: 1px solid #ddd;
+    		padding: 1px 2px;
+    		margin: 2px 2px;*/
+    		padding: 0px 13px;
+    		width: 70%;
+    		display: inline-block;
+    		height:26px;
+    	}
+    	.ibold { font-weight: bold;}
+    	.right {
+    		text-align: right;	
+    	}
+    	.text-error { color: #ff0000; }
+    	.text-warning { color: #ff7f00; }
+    	.text-success { color: #00cc00; }
+    	.save-success {
+    		background-color: #00cc00;
+    		border: 1px solid #00cc00;
+    	}
+    	.alert-small {
+    		/*margin-bottom: 10px;
+    		padding: 5px 10px;	*/
+    	}
+    </style>
+
+  <div class="page-header">
+    <div class="container-fluid">
+      <h1>{{ sm_heading_combinations_title }}</h1>
+      <ul class="breadcrumb">
+			{% for breadcrumb in breadcrumbs %}
+        <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+			{% endfor %}
+      </ul>
+    </div>
+  </div>
+
+  <div class="container-fluid">
+	  {% if error_warning %}
+    <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %}
+		{% if error_attention %}
+    <div class="alert alert-warning"><i class="fa fa fa-warning"></i> {{ error_attention }}
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %}
+		{% if success %}
+    <div class="alert alert-success"><i class="fa fa-check-circle"></i> {{ success }}
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %}
+		
+		<div class="row">
+			<div id="filter-product" class="col-md-3 col-md-push-9 col-sm-12 hidden-sm hidden-xs">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+							<h3 class="panel-title"><i class="fa fa-filter"></i> {{ sm_text_filter }}</h3>
+					</div>
+					<div class="panel-body">
+						<div class="form-group">
+							<label class="control-label" for="input-name">{{ sm_column_name }}</label>
+							<input type="text" name="filter_name" value="{{ filter_name }}" placeholder="{{ sm_column_name }}" id="input-name" class="form-control" />
+						</div>
+						<div class="form-group">
+							<label class="control-label" for="input-option-value">{{ sm_column_option_value }}</label>
+							<input type="text" name="filter_option" value="{{ filter_option }}" placeholder="{{ sm_column_option_value }}" id="input-option-value" class="form-control" />
+						</div>
+						<div class="form-group">
+							<label class="control-label" for="input-model">{{ sm_column_product_model }}</label>
+							<input type="text" name="filter_model" value="{{ filter_model }}" placeholder="{{ sm_column_product_model }}" id="input-model" class="form-control" />
+						</div>
+						<div class="form-group">
+							<label class="control-label" for="input-comb-quantity">{{ sm_column_comb_quantity }} (&le;)</label>
+							<input type="text" name="filter_comb_quantity" value="{{ filter_comb_quantity }}" placeholder="{{ sm_column_comb_quantity }}" id="input-comb-quantity" class="form-control" />
+									</div>
+						<div class="form-group">
+							<label class="control-label" for="input-quantity">{{ sm_column_product_quantity }} (&le;)</label>
+							<input type="text" name="filter_quantity" value="{{ filter_quantity }}" placeholder="{{ sm_column_product_quantity }}" id="input-quantity" class="form-control" />
+						</div>
+						<div class="form-group text-right">
+							<button type="button" id="button-filter" class="btn btn-default"><i class="fa fa-filter"></i> {{ sm_button_filter }}</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="col-md-9 col-md-pull-3 col-sm-12">
+			
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title"><i class="fa fa-list"></i> {{ sm_text_combinations_list }}</h3>
+					</div>
+					<div class="panel-body">
+						<div class="table-responsive">
+							<table class="table table-bordered table-hover">
+								<thead>
+									<tr>
+										<td width="35%" class="text-left"> {% if (sort == 'pd.name') %} <a href="{{ sort_name }}" class="{{ order|lower }}">{{ sm_column_name }}</a> {% else %}<a href="{{ sort_name }}">{{ sm_column_name }}</a> {% endif %}</td>
+										<td width="35%" class="text-left"> {% if (sort == 'p.model') %} <a href="{{ sort_model }}" class="{{ order|lower }}">{{ sm_column_model }}</a> {% else %}<a href="{{ sort_model }}">{{ sm_column_model }}</a> {% endif %}</td>
+										<td width="15%" class="text-left">{% if (sort == 'p.quantity') %} <a href="{{ sort_quantity }}" class="{{ order|lower }}">{{ sm_column_quantity }}</a> {% else %} <a href="{{ sort_quantity }}">{{ sm_column_quantity }}</a> {% endif %}</td>
+										<td width="15%" class="text-right">{{ sm_column_action }}</td>
+									</tr>
+								</thead>
+								<tbody>
+									{% if (products) %}
+										
+									{% for product in products %}
+									<tr id="product-{{ product.product_id }}" class="product-row">
+										<td class="text-left">
+											<a class="browse-icon" href="#" data-original-title="{{ button_collapse }}" data-toggle="tooltip"><i class="ibold fa fa-angle-down"></i></a>{{ product.name }}
+										</td>
+										<td class="text-left">{{ product.model }}</td>
+										<td class="text-center">{{ product.quantity }}</td>
+										<td class="text-right" nowrap>
+											<i style="display:none;" class="fa fa-spinner"></i>
+											<a class="cancel-icon" href="#" data-original-title="{{ sm_button_cancel }}" data-toggle="tooltip"><i class="fa fa-reply"></i></a>
+											<a class="save-icon" href="#" data-original-title="{{ sm_button_save }}" data-toggle="tooltip"><i class="fa fa-save"></i></a>
+											<a class="edit-icon" href="#" data-original-title="{{ sm_button_edit }}" data-toggle="tooltip"><i class="fa fa-pencil"></i></a>
+										</td>
+									</tr>
+									{% set combinations = product.combinations %}
+									<tr id="product-{{ product.product_id }}-combinations"><td colspan="4" class="text-left combinations-td">
+										<table class="combinations-table table table-striped table-bordered">
+										<thead>
+											{% set options = product.options %}
+											<tr>
+												<td style="display:none"><input type="hidden" name="product_id" value="{{ product.product_id }}"/></td>
+												<td width="70%" class="left">{{ options|join(' / ') }}</td>
+												<td width="15%" class="text-left">{{ sm_column_quantity }}</td>
+												<td width="15%" class="text-left">{{ sm_column_sku }}</td>
+											</tr>
+										</thead>
+										<tbody>
+										{% set row = 0 %}
+										{% for combination in combinations %}
+										<tr id="{{ combination.combination_id }}">
+											<td style="display:none"><input type="hidden" name='product_combinations[{{ row }}][combination_id]";?>' value="{{ combination.combination_id }}"/></td>
+												<td class="left">{{ combination.option_value_names|join(' - ') }}</td>
+												<td class="text-left">
+												{% set class = "" %} 
+												<span class="text-field {{ class }}">{{ combination.quantity }}</span>
+												<input style="display:none;" class="right input-field form-control" type="text" name='product_combinations[{{ row }}][quantity]' value="{{ combination.quantity }}"/>
+											</td>  
+											<td class="text-left">
+												 <span class="text-field">{{ combination.sku }}</span>
+												 <input style="display:none;" class="right input-field form-control" type="text" name='product_combinations[{{ row }}][sku]' value="{{ combination.sku }}"/>
+											</td>  						
+										</tr>
+										{% set row = row + 1 %}
+										{% endfor %}
+									</tbody>
+									</table>
+									</td></tr>
+									{% endfor %}
+									{% else %}
+									<tr>
+										<td class="text-center" colspan="6">{{ sm_text_no_results }}</td>
+									</tr>
+									{% endif %}
+								</tbody>
+							</table>
+						</div> <!-- table-responsive -->
+						<div class="row">
+							<div class="col-sm-6 text-left">{{ pagination }}</div>
+							<div class="col-sm-6 text-right">{{ results }}</div>
+						</div>
+					</div>
+				</div> <!-- panel -->
+			</div> 
+		</div>
+		
+  </div>   <!-- container-fluid -->
+</div>     <!-- content -->
+
+<script type="text/javascript">
+  function showError(e, error) {
+  	e.before('<div class="alert alert-danger alert-small"><i class="fa fa-exclamation-circle"></i> ' + 
+  	error + 
+  	'<button data-dismiss="alert" class="close" type="button">&times;</button></div>');
+  }
+  
+  function combinationsFromIcon(icon) {
+  	var tr = icon.closest('tr');
+  	var combsId = tr.attr('id') + '-combinations';
+		return $('#' + combsId);
+  }
+
+  function switchFields(combinations, showText, copyValues) {
+    var textFields = combinations.find('.text-field');
+    var inputFields = combinations.find('.input-field');
+    
+    if (showText) {
+    	if (copyValues) {
+    		inputFields.each(function(index) {
+    			var value = $(this).val();
+    			$(this).prev().html(value);
+    		});
+    	}
+    	
+    	textFields.show();
+    	inputFields.hide();	
+    } else {
+    	if (copyValues) {
+    		textFields.each(function(index) {
+    			var value = $(this).html();
+    			$(this).next().val(value);
+    		});
+    	}
+    	
+    	textFields.hide();
+    	inputFields.show();	
+    }
+  }
+  
+  //$('.text-field, .input-field').show();
+
+  $('.browse-icon').click(function(e) {
+  	e.preventDefault();
+  	var icon = $(this);
+  	icon.blur();
+  	var i = icon.find('i:first');
+  	
+	var expanded = i.hasClass('fa-angle-down');
+	if (expanded) {
+  		icon.attr('data-original-title', '{{ button_expand }}');
+  		combinationsFromIcon(icon).hide();
+  	} else {
+  		icon.attr('data-original-title', '{{ button_collapse }}');
+  		combinationsFromIcon(icon).show();
+  	}
+	
+	i.toggleClass('fa-angle-down');
+	i.toggleClass('fa-angle-right');
+
+  	return false;
+  });
+  
+  $('.cancel-icon').click(function(e) {
+  	e.preventDefault();
+  	
+  	var icon = $(this);
+  	icon.blur();
+  	icon.hide();
+  	
+  	$('.alert').hide();
+  	$('.text-error').hide();
+  	icon.parent().find('.save-icon').hide();
+  	icon.parent().find('.edit-icon').removeClass('open');
+	
+  	var combs = combinationsFromIcon(icon);
+  	
+  	switchFields(combs, true, false); // show text and hide edit (don't copy values)
+  	return false;
+  });
+  
+  $('.edit-icon').click(function(e) {
+  	e.preventDefault();
+  	var icon = $(this);
+  	icon.blur();
+  	if (icon.hasClass('open')) {
+  		return false;	
+  	}
+  	
+  	var saveIcon = icon.parent().find('.save-icon');
+  	saveIcon.removeClass('save-success');
+  	saveIcon.stop().animate({'opacity': '100'});
+  	saveIcon.show();
+  	
+  	icon.parent().find('.cancel-icon').show();
+  	
+  	var combs = combinationsFromIcon(icon);
+  	
+  	switchFields(combs, false, true); // show edit and hide text. copy values from text to edit fields
+  	
+  	icon.addClass('open');
+  	
+  	return false;
+  });
+  
+  $('.save-icon').click(function(e) {
+  	e.preventDefault();
+  	var icon = $(this);
+  	icon.blur();
+  	
+  	var loadingIcon = icon.parent().find('i:first');
+  	var combs = combinationsFromIcon(icon);
+ 	
+  	$.ajax({
+		url: '{{update_combinations_link }}',
+		dataType: 'json',
+		data: combs.find('input'),
+		type: 'post',
+		beforeSend: function() {
+			loadingIcon.toggleClass("fa-spin"); // start spinning loading icon
+			loadingIcon.show();
+		},
+		complete: function() {
+			loadingIcon.hide();
+			loadingIcon.toggleClass("fa-spin");		// remove loading icon
+		},
+		success: function(json) {
+			combs.find('.text-error').remove(); // remove red asterisks beside text fields if any
+			combs.find('.alert').remove();		// remove error message if any
+			if (json['error']) { 
+				showError(combs.find('table'), json['error']); // add error message
+				
+				// loop to display asterisks beside the correct field
+				if (json['error_quantity']) {
+					var inputs = combs.find('table input[name*="quantity"]');
+					inputs.each( function(index) {
+						var exists = $.inArray(index, json['error_quantity']) != -1;
+						if (exists) {
+							$(this).after('<span class="text-error">***</span>');
+						}
+					});
+				}
+			} else {
+				switchFields(combs, true, true); // show text and hide edit. copy values from edit to text fields
+				icon.parent().find('.cancel-icon').hide();
+				icon.parent().find('.edit-icon').removeClass('open');
+  				icon.toggleClass('save-success');
+  				icon.fadeOut(1500, function() {icon.toggleClass('save-success');} );
+  				var quantity = icon.parent().prev()
+  				quantity.html(json['product_quantity']);
+  			}
+		},
+		error: function(xhr, ajaxOptions, thrownError) {
+			combs.find('.alert').remove();
+			var error = 'Unexpected error (tr): ' + thrownError + " Status:" + xhr.statusText + " Response:" + xhr.responseText;
+			showError(combs.find('table'), error);
+		}
+	});
+  	
+  	return false;
+  });
+</script>
+
+<script type="text/javascript"><!--
+
+function appendParam(param) {
+	var param_name = $('input[name=\'' + param + '\']').val();
+	if (param_name) {
+		return '&' + param + '=' + encodeURIComponent(param_name);
+	}
+	return '';
+}
+
+$('#button-filter').on('click', function() {
+	var url = '{{ combinations_link }}';
+
+	url += appendParam('filter_name');
+	url += appendParam('filter_model');
+	url += appendParam('filter_quantity');
+	url += appendParam('filter_comb_quantity');
+	url += appendParam('filter_option');
+	
+	location = url;
+});
+//--></script> 
+<script type="text/javascript"><!--
+
+function autocompleter(url, filter_param, first_field, second_field) {
+	return {
+		'source': function(request, response) {
+			$.ajax({
+				url: url + '&' + filter_param + '=' +  encodeURIComponent(request), 
+				dataType: 'json',
+				success: function(json) {
+					response($.map(json, function(item) {
+						return {
+							label: item[first_field],
+							value: item[second_field]
+						}
+					}));
+				}
+			});
+		},
+		'select': function(item) {
+			$('input[name=\'' + filter_param + '\']').val(item['label']);
+		}
+	};
+}
+
+$('input[name=\'filter_name\']').autocomplete( autocompleter('{{ autocomplete_link }}', 'filter_name', 'name', 'product_id') );
+$('input[name=\'filter_model\']').autocomplete( autocompleter('{{ autocomplete_link }}', 'filter_model', 'model', 'product_id') );
+$('input[name=\'filter_option\']').autocomplete( autocompleter('{{ autocomplete_options_link }}', 'filter_option', 'name', 'name') );
+
+//--></script></div>
+{{ footer }}

@@ -1,0 +1,465 @@
+{{ header }}
+<style>
+      .footer-menu {
+                display: none;
+            }
+            .footer_terms {
+                  display: none;
+            }
+</style>
+<div class="container-fluid custom-cart-head">
+	<div class="container">
+	<div class="row">
+	{% if total_cart_items == 1 %}
+		<div class="col-md-6"><h2>{{ countpro }} item in your cart</h2></div>
+    {% else %}
+  <div class="col-md-6"><h2>{{ countpro }} items in your cart</h2></div>
+    {% endif %}
+
+
+		<div class="col-md-6 k-s-btn"><a href="">Keep Shopping</a></div>
+		<div class="clearfix"></div>
+	</div>
+	</div>
+</div>
+
+<div id="checkout-cart" class="container">
+  <ul class="breadcrumb">
+    {% for breadcrumb in breadcrumbs %}
+    <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+    {% endfor %}
+  </ul>
+  {% if attention %}
+  <div class="alert alert-info"><i class="fa fa-info-circle"></i> {{ attention }}
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+  </div>
+  {% endif %}
+  {% if success %}
+  <div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> {{ success }}
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+  </div>
+  {% endif %}
+  {% if error_warning %}
+  <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+  </div>
+  {% endif %}
+  <div class="row">{{ column_left }}
+    {% if column_left and column_right %}
+    {% set class = 'col-sm-6' %}
+    {% elseif column_left or column_right %}
+    {% set class = 'col-sm-9' %}
+    {% else %}
+    {% set class = 'col-sm-12' %}
+    {% endif %}
+    <div id="content" class="{{ class }}">{{ content_top }}
+	<div class="custom-checkout">
+      <h1 style="display:none">
+	  Cart
+	  <!-- {{ heading_title }}
+        {% if weight %}
+        &nbsp;({{ weight }})
+        {% endif %} --> </h1>
+      <form action="{{ action }}" method="post" enctype="multipart/form-data" class="col-md-8">
+        <div class="table-responsive">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <td class="text-center"> </td><td class="text-center"> </td>
+                <td class="text-left"><!-- {{ column_name }} --></td>
+              <!--  <td class="text-left"> {{ column_model }}</td> -->
+                <td class="text-left"><!-- {{ column_quantity }} --></td>
+                <!--td class="text-right">{{ column_price }}</td-->
+               <!--  <td class="text-right seller"><a href="#">Contact Seller</a></td> -->
+              </tr>
+            </thead>
+            <tbody>
+            {% set i = 1 %}
+            {% for product in products %}
+            <tr>
+				<td><button type="button" data-toggle="tooltip" title="{{ button_remove }}" class="btn btn-danger btn-cart-remove" onclick="cart.remove('{{ product.cart_id }}');"><i class="fa fa-times cart-remove-icon"></i></button></td>
+              <td class="text-center img-set">{{ product.citystate }}{% if product.thumb %} <a href="{{ product.href }}"><img src="{{ product.thumb }}" alt="{{ product.name }}" title="{{ product.name }}" class="img-thumbnail" /></a> {% endif %}</td>
+              <td class="text-left info-set">
+              {% if product.companyname|length > 1 %}
+                <h4>By {{ product.companyname }} </h4>
+              {% endif %}
+              <a href="{{ product.href }}">{{ product.name }}</a> {% if not product.stock %} <span class="text-danger">***</span> {% endif %}
+                {% if product.option %}
+                    {% for option in product.option %} <br />
+                        <small class="size">{{ option.name }}: {{ option.value }}</small>
+                        {% if option.name == 'Enter Your Dog Name' %}
+                            <input class="dog_name_{{i}}" type="hidden" value="{{ option.value }}" />
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+                {% if product.reward %} <br />
+                <small>{{ product.reward }}</small> {% endif %}
+                {% if product.recurring %} <br />
+                <span class="label label-info">{{ text_recurring_item }}</span> <small>{{ product.recurring }}</small> {% endif %}</td>
+              <!--td class="text-left">{{ product.model }}</td-->
+              <td class="text-left select-set"><div class="input-group btn-block qtycont" style="max-width: 200px;">
+			  <select class="changeqty" name="quantity[{{ product.cart_id }}]">
+			  <option {% if product.quantity == 1 %} selected='selected' {% endif %} value="1">1</option>
+			  <option  {% if product.quantity == 2 %} selected='selected' {% endif %} value="2">2</option>
+			  <option {% if product.quantity == 3 %} selected='selected' {% endif %}  value="3">3</option>
+			  <option {% if product.quantity == 4 %} selected='selected' {% endif %}  value="4">4</option>
+			  <option {% if product.quantity == 5 %} selected='selected' {% endif %}  value="5">5</option>
+			  <option {% if product.quantity == 6 %} selected='selected' {% endif %}  value="6">6</option>
+			  <option {% if product.quantity == 7 %} selected='selected' {% endif %}  value="7">7</option>
+			  <option {% if product.quantity == 8 %} selected='selected' {% endif %} value="8">8</option>
+			  <option {% if product.quantity == 9 %} selected='selected' {% endif %}  value="9">9</option>
+			  <option {% if product.quantity == 10 %} selected='selected' {% endif %}  value="10">10</option>
+			 			  
+			  </select>
+                  <input style="display:none" class="origqty" type="text" name="quantity[{{ product.cart_id }}]" value="{{ product.quantity }}" size="1" class="form-control" />
+				   <button style="display:none" type="submit" data-toggle="tooltip" title="{{ button_update }}" class="btn btn-primary btnqty"><i class="fa fa-refresh"></i></button>
+                  </div></td>
+              <!--td class="text-right">{{ product.price }}</td-->
+              <td class="text-right p-price">{{ product.total }}</td>
+            </tr>
+            {% set i = i+1 %}
+            {% endfor %}
+            {% for voucher in vouchers %}
+            <tr>
+              <td></td>
+              <td class="text-left">{{ voucher.description }}</td>
+              <td class="text-left"></td>
+              <td class="text-left"><div class="input-group btn-block" style="max-width: 200px;">
+                  <input type="text" name="" value="1" size="1" disabled="disabled" class="form-control" />
+                  <span class="input-group-btn">
+                  <button type="button" data-toggle="tooltip" title="{{ button_remove }}" class="btn btn-danger" onclick="voucher.remove('{{ voucher.key }}');"><i class="fa fa-times-circle"></i></button>
+                  </span></div></td>
+              <td class="text-right">{{ voucher.amount }}</td>
+              <td class="text-right">{{ voucher.amount }}</td>
+            </tr>
+            {% endfor %}
+			
+			<!--tr>
+				<td></td>
+				<td colspan="2">
+					<div class="check-set"><input type="checkbox"></div>
+					<div class="check-text"><span class="up">This order is a gift</span><br><span class="down">Prices will not be shown on packing slip</span></div>
+				</td>
+				<td></td>
+				<td></td>
+			</tr-->
+			<tr>
+				<td></td>
+				<td style="display: none;" colspan="2" class="textarea-set"><textarea placeholder="Add a note to the seller (optional)"></textarea></td>
+				<td colspan="4" class="ship-set" style="display: none;">
+					<span class="up">Shipping: Free</span>
+     {#     {% if shipping_text %}#}
+     {#     <span class="down">{{ shipping_text }}</span>#}
+     {#      {% endif %}#}
+					
+				</td>
+			</tr>
+			
+              </tbody>
+            
+          </table>
+        </div>
+      </form>
+          <div class="col-md-4 table-right customcarttables">
+          <table class="table table-bordered">
+			<tr class="b0">
+				<td class="custom_payment_method" colspan="2"><h4>How you'll pay</h4> 
+				
+				<div class="checkbox">
+		          <label>
+		            <input name="p1" class="custom-checkdesigns" value="cc_pm" id="custom-checkdesign" type="radio"><span for="custom-checkdesign"></span> <ul><li><img src="/catalog/view/theme/pav_xstore/image/visacard_icon.png"></li><li><img src="/catalog/view/theme/pav_xstore/image/mastercard_icon.png"></li><li><img src="/catalog/view/theme/pav_xstore/image/americanexpress_icon.png"></li></ul>
+					<h4 style="color:red" class="paymentg"></h4> 
+		           </label>
+		          <label>
+		            <input name="p1" class="custom-checkdesign" value="paypal_pm" id="custom-checkdesign" type="radio"><span for="custom-checkdesign"></span><ul><li><img src="/catalog/view/theme/pav_xstore/image/paypal_icon.png"></li></ul>
+					<h4 style="color:red" class="paymentg"></h4> 
+		           </label>
+		        </div>
+				</td>
+			</tr>
+            {% for total in totals %}
+            <tr>
+              <td class="text-left"><strong>{{ total.title }}:</strong></td>
+              <td class="text-right">{{ total.text }}</td>
+			
+            </tr>
+			  {% if total.title == 'Item(s) total' %} 
+			   <tr> <td class="text-left"><strong>Shipping:<br></strong></td>
+              <td class="text-right">Free </td> </tr>
+			  {% endif %}
+            {% endfor %}
+          </table>
+		      <div class="buttons clearfix">
+        <div style="display:none" class="pull-left"><a href="{{ continue }}" class="btn btn-default">{{ button_shopping }}</a></div>
+		{% if logged %}
+        <div class="process-btn"><a href="{{ checkout }}" class="btn btn-primary">Proceed to Checkout</a></div>
+		{% else %} 
+    <div id="checkout_button">
+		 <div class="process-btn"><a href="javascript:void()"  class="btn btn-primary proceedpopup test1">Proceed to Checkout</a><a href="javascript:void()" data-toggle="modal" style="display:none;" data-target="#epopModal" class="btn btn-primary proceedpopups">Proceed to Checkout</a></div>
+    </div>
+<div id="paypal_button" style="display:none">
+     <div class="process-btn"><a href="javascript:void()" onclick="submitpaypal();"  class="btn btn-primary proceedpaypal">pay with paypal</a></div>
+   </div>
+
+		{% endif %} 
+		<div class="vat">VAT included (where applicable)</div>
+      </div>
+        </div>
+
+	{% if modules %}
+      <div class="panel-group" id="accordion" style="display:none">   <h2>{{ text_next }}</h2>
+      <p>{{ text_next_choice }}</p>{% for module in modules %}
+        {{ module }}
+        {% endfor %}<br />  </div>
+     {% endif %} 
+      <div class="row">
+  
+      </div>
+  
+      {{ content_bottom }}</div>
+      <div class="cart_recommended">
+        {{cart_recommended}}
+      </div>
+      
+      </div>
+    {{ column_right }}</div>
+</div>
+<input type='hidden' class='checkout_url' value='{{ checkout }}'/>
+<input type='hidden' class='paypal_url' value='{{ paypal_action }}'/>
+{#<div id="epopModal" class="modal fade" role="dialog">#}
+{#  <div class="modal-dialog">#}
+{#    <div class="modal-content">#}
+{#      <div class="modal-header">#}
+{#        <h4 class="modal-title">Hi! What’s your email?</h4>#}
+{#      </div>#}
+{#      <div class="modal-body">#}
+{#      <div class="echeck-pop"><input class="emailad" type="email" required placeholder="Email address *"></div>#}
+{#      <div class="bcheck-pop"><div class="process-btn"><a href="{{ checkout }}" onclick="(function(){#}
+{#  var emailad= $('.emailad').val();#}
+
+{#  if(!emailad){   }else{#}
+  
+{#  setCookie('emailid', emailad);#}
+{#  sessionStorage.setItem('lastname', 'emailad');#}
+{#  window.location.href('{{ checkout }}');#}
+{#    return false;#}
+{#	}#}
+{#})();return false;" class="btn btn-primary pay_url_cstm">Proceed to Checkout</a></div></div>#}
+{#      <a href="{{ checkout }}">Sign in</a>    #}
+{#      </div>#}
+{#    </div>#}
+{#  </div>#}
+{#</div>#}
+
+
+<div id="epopModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Hi! What’s your email?</h4>
+      </div>
+      <div class="modal-body">
+          <form action="{{ checkout }}" method="post" id="paypent_form">
+     <div class="echeck-pop"><input class="emailad" name="email_id" type="email" placeholder="Email address *" required></div>
+     <div id="email_error" class="alert-danger"></div>
+      <div class="bcheck-pop"><div class="process-btn"></div></div>
+      
+      <input type="hidden" name="cmd" value="_cart" />
+  <input type="hidden" name="upload" value="1" />
+  <input type="hidden" name="business" value="{{ business }}" />
+  {% set i = 1 %}
+  {% for product in products1 %}
+  <input type="hidden" name="item_name_{{ i }}" value="{{ product.name }}" />
+  <input type="hidden" name="item_number_{{ i }}" value="{{ product.model }}" />
+  <input type="hidden" name="amount_{{ i }}" value="{{ product.price }}" />
+  <input type="hidden" name="quantity_{{ i }}" value="{{ product.quantity }}" />
+  <input type="hidden" name="weight_{{ i }}" value="{{ product.weight }}" />
+  {% set j = 0 %}
+  {% for option in product.option %}
+  <input type="hidden" name="on{{ j }}_{{ i }}" value="{{ option.name }}" />
+  <input type="hidden" name="os{{ j }}_{{ i }}" value="{{ option.value }}" />
+  {% set j = j + 1 %}
+  {% endfor %}
+  {% set i = i + 1 %}
+  {% endfor %}
+  {% if discount_amount_cart %}
+  <input type="hidden" name="amount" value="{{ discount_amount_cart }}" />
+  {% endif %}
+  <input type="hidden" name="currency_code" value="{{ currency_code }}" />
+   <input type="hidden" name="lc" value="{{ lc }}" />
+  <input type="hidden" name="rm" value="2" />
+  <input type="hidden" name="no_note" value="1" />
+  <input type="hidden" name="no_shipping" value="1" />
+  <input type="hidden" name="charset" value="utf-8" />
+  <input type="hidden" name="return" value="{{ return }}" />
+  <input type="hidden" name="notify_url" value="{{ notify_url }}" />
+  <input type="hidden" name="cancel_return" value="{{ cancel_return }}" />
+  <input type="hidden" name="paymentaction" value="{{ paymentaction }}" />
+  <input type="hidden" name="bn" value="OpenCart_2.0_WPS" />
+
+  <div class="bcheck-pop"><div class="process-btn">
+   <a class="btn btn-primary pay_url_cstm" onclick=submitcheckout();>Proceed to Checkout</a>
+   </div></div>
+      </form>
+      
+      </div>
+    </div>
+  </div>
+</div>
+
+
+ <form action="{{ paypal_action }}" method="post" id="paypal_form">
+   
+      <input type="hidden" name="cmd" value="_cart" />
+  <input type="hidden" name="upload" value="1" />
+  <input type="hidden" name="business" value="{{ business }}" />
+  {% set i = 1 %}
+  {% for product in products1 %}
+  <input type="hidden" name="item_name_{{ i }}" value="{{ product.name }}" />
+  <input type="hidden" name="item_number_{{ i }}" value="{{ product.model }}" />
+  <input type="hidden" name="amount_{{ i }}" value="{{ product.price }}" />
+  <input type="hidden" name="quantity_{{ i }}" value="{{ product.quantity }}" />
+  <input type="hidden" name="weight_{{ i }}" value="{{ product.weight }}" />
+  {% set j = 0 %}
+  {% for option in product.option %}
+  <input type="hidden" name="on{{ j }}_{{ i }}" value="{{ option.name }}" />
+  <input type="hidden" name="os{{ j }}_{{ i }}" value="{{ option.value }}" />
+  {% set j = j + 1 %}
+  {% endfor %}
+  {% set i = i + 1 %}
+  {% endfor %}
+  {% if discount_amount_cart %}
+  <input type="hidden" name="amount" value="{{ discount_amount_cart }}" />
+  {% endif %}
+  <input type="hidden" name="currency_code" value="{{ currency_code }}" />
+   <input type="hidden" name="lc" value="{{ lc }}" />
+  <input type="hidden" name="rm" value="2" />
+  <input type="hidden" name="no_note" value="1" />
+  <input type="hidden" name="no_shipping" value="1" />
+  <input type="hidden" name="charset" value="utf-8" />
+  <input type="hidden" name="return" value="{{ return }}" />
+  <input type="hidden" name="notify_url" value="{{ notify_url }}" />
+  <input type="hidden" name="cancel_return" value="{{ cancel_return }}" />
+  <input type="hidden" name="paymentaction" value="{{ paymentaction }}" />
+  <input type="hidden" name="bn" value="OpenCart_2.0_WPS" />
+  <input type="hidden" name="address_override" value="1">
+<input type="hidden" name="no_shipping" value="2">
+ <input type="hidden" name="custom"  id="order_id_custom" value=""/>
+
+      </form>
+
+<script>
+function submitcheckout(){
+    
+     var emailad= $('.emailad').val();
+  if(!emailad){ 
+
+    $("#email_error").html('Please enter email');
+
+    }else{
+  if(isValidEmailAddress(emailad)){
+
+    $("#email_error").html();
+     setCookie('emailid', emailad);
+  sessionStorage.setItem('lastname', 'emailad');
+ $("#paypent_form").submit();
+
+    return false;
+
+  }else{
+  $("#email_error").html('Please enter valid email');
+    }
+	}
+}
+
+function isValidEmailAddress(emailAddress) {
+    var pattern = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
+    return pattern.test(emailAddress);
+}
+
+function submitpaypal(){ 
+  var submitpay = '1';
+  $.ajax({
+            url: 'index.php?route=checkout/cart/addordercart',
+            type: 'post',
+            data: "{submitpay: submitpay}",
+            dataType: 'json',           
+            success: function(json) {
+            var order_id = json['order_id'];
+            
+            $('#order_id_custom').val(order_id);
+            setTimeout( function(){ 
+              $("#paypal_form").submit();
+            }  , 1000 );
+            
+            },            
+        });
+     
+}
+
+
+ function setCookie(key, value) {
+            var expires = new Date();
+            expires.setTime(expires.getTime() + (1 * 24 * 60 * 60 * 1000));
+            document.cookie = key + '=' + value + ';expires=' + expires.toUTCString();
+        }
+
+		$('.changeqty').on('change', function() {
+  //alert( this.value );
+  $(this).closest('.qtycont').find('.origqty').val(this.value);
+  
+ $(this).closest('.qtycont').find( ".btnqty" ).trigger( "click" );
+});
+    
+$(document).delegate('.proceedpopup', 'click', function() {
+
+var isCheckeds = $('.custom-checkdesigns').prop('checked');
+var isChecked = $('.custom-checkdesign').prop('checked');
+if(isChecked){
+$('.proceedpopups').trigger('click');
+
+}else if(isCheckeds){
+$('.proceedpopups').trigger('click');
+}else{
+$('.paymentg').html('Select payment method');
+
+}
+ });	
+$(document).delegate('.process-btn a', 'click', function() {
+
+// var emailid = $('.echeck-pop input').val();
+// sessionStorage.setItem("lastname", emailid);
+
+// setCookie("emailid", emailid);
+
+ });
+$(document).ready(function(){
+
+  $('input[name="p1"]').change(function(){
+    if($(this).val() == 'paypal_pm'){
+      $('.proceedpopup').text('Pay with PayPal');
+        var url = $('.checkout_url').val();
+           var paypal_url = $('.paypal_url').val();
+        var f_url = url+'&payment_method='+$(this).val();
+        $('form#paypent_form').attr('action',paypal_url)
+        
+        $("#paypal_button").css("display","block");
+        $("#checkout_button").css("display","none");
+        
+    }
+    else{
+       var url = $('.checkout_url').val();
+      $('form#paypent_form').attr('action',url)
+      $("#paypal_button").css("display","none");
+       $("#checkout_button").css("display","block");
+        $('.proceedpopup').text('Proceed to Checkout');
+        var url = $('.checkout_url').val();
+        //var f_url = url+'&payment_method='+$(this).val();
+        
+      
+    } 
+  });
+});
+</script>
+
+ {{ footer }} 

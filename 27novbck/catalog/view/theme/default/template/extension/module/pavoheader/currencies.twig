@@ -1,0 +1,7 @@
+{% if settings.extra_class %}
+	<div class="{{settings.extra_class}}">
+		{{ settings.currency }}
+	</div>
+{% else %}
+	{{ settings.currency }}
+{% endif %}

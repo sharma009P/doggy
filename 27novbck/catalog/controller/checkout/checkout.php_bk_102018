@@ -1,0 +1,294 @@
+<?php
+class ControllerCheckoutCheckout extends Controller {
+	public function index() {
+	    if(isset($_REQUEST['payment_method'])){
+	        	
+	        ///echo 'paypal code will be implemented here.';
+	        
+
+	        	$products = $this->cart->getProducts();
+    
+    		foreach ($products as $product) {
+    			$product_total = 0;
+    
+    			foreach ($products as $product_2) {
+    				if ($product_2['product_id'] == $product['product_id']) {
+    					$product_total += $product_2['quantity'];
+    				}
+    			}
+    
+    			
+    		}
+    	
+// 	        $enableSandbox = false;
+	        
+// 	        $paypalConfig = [
+//     'email' => 'developer@yopmail.com',
+//     'return_url' => $this->url->link('checkout/success'),
+//     'cancel_url' => $this->url->link('checkout/failed'),
+//     'notify_url' => '',
+// ];
+
+// $paypalUrl = $enableSandbox ? 'https://www.sandbox.paypal.com/cgi-bin/webscr' : 'https://www.paypal.com/cgi-bin/webscr';
+
+// $itemName = 'Test Item';
+// $itemAmount = 5.00;
+
+
+//     $data['business'] = $paypalConfig['email'];
+
+//     // Set the PayPal return addresses.
+//     $data['return'] = stripslashes($paypalConfig['return_url']);
+//     $data['cancel_return'] = stripslashes($paypalConfig['cancel_url']);
+//     $data['notify_url'] = stripslashes($paypalConfig['notify_url']);
+
+//     // Set the details about the product being purchased, including the amount
+//     // and currency so that these aren't overridden by the form data.
+//     $data['item_name'] = $itemName;
+//     $data['amount'] = $itemAmount;
+//     $data['currency_code'] = 'GBP';
+
+   
+//     $queryString = http_build_query($data);
+// $url = $paypalUrl.'?'.$queryString;
+
+
+//     	$this->response->redirect($url);
+    	
+    // 	
+    
+    if($_REQUEST['payment_method'] == 'paypal_pm'){
+        
+        	$data['testmode'] = 1;
+
+		if (!$this->config->get('payment_pp_standard_test')) {
+			$data['action'] = 'https://www.paypal.com/cgi-bin/webscr&pal=V4T754QB63XXL';
+		} else {
+			$data['action'] = 'https://www.sandbox.paypal.com/cgi-bin/webscr&pal=V4T754QB63XXL';
+		}
+		
+		$data['business'] = 'satish.inext@gmail.com';
+		
+			$data['products'] = array();
+
+			foreach ($this->cart->getProducts() as $product) {
+				$option_data = array();
+
+				foreach ($product['option'] as $option) {
+					if ($option['type'] != 'file') {
+						$value = $option['value'];
+					} else {
+						$upload_info = $this->model_tool_upload->getUploadByCode($option['value']);
+						
+						if ($upload_info) {
+							$value = $upload_info['name'];
+						} else {
+							$value = '';
+						}
+					}
+
+					$option_data[] = array(
+						'name'  => $option['name'],
+						'value' => (utf8_strlen($value) > 20 ? utf8_substr($value, 0, 20) . '..' : $value)
+					);
+				}
+
+				$data['products'][] = array(
+					'name'     => htmlspecialchars($product['name']),
+					'model'    => htmlspecialchars($product['model']),
+					'price'    => $this->currency->format($product['price'], $order_info['currency_code'], false, false),
+					'quantity' => $product['quantity'],
+					'option'   => $option_data,
+					'weight'   => $product['weight']
+				);
+			}
+			
+				$data['discount_amount_cart'] = 0;
+
+			$total = $this->currency->format($order_info['total'] - $this->cart->getSubTotal(), $order_info['currency_code'], false, false);
+
+			if ($total > 0) {
+				$data['products'][] = array(
+					'name'     => $this->language->get('text_total'),
+					'model'    => '',
+					'price'    => $total,
+					'quantity' => 1,
+					'option'   => array(),
+					'weight'   => 0
+				);
+			} else {
+				$data['discount_amount_cart'] -= $total;
+			}
+			
+$data['currency_code'] = 'GBP';
+$data['lc'] = $this->session->data['language'];
+
+	$data['return'] = $this->url->link('checkout/success');
+			$data['notify_url'] = $this->url->link('extension/payment/pp_standard/callback', '', true);
+			$data['cancel_return'] = $this->url->link('checkout/checkout', '', true);
+						if (!$this->config->get('payment_pp_standard_transaction')) {
+				$data['paymentaction'] = 'authorization';
+			} else {
+				$data['paymentaction'] = 'sale';
+			}
+
+        
+        
+        	$this->response->setOutput($this->load->view('checkout/paypal', $data));
+    
+        
+    }
+    
+    
+    
+    // 
+
+	    }
+	    else {
+	       
+    		// Validate cart has products and has stock.
+    		if ((!$this->cart->hasProducts() && empty($this->session->data['vouchers'])) || (!$this->cart->hasStock() && !$this->config->get('config_stock_checkout'))) {
+    			$this->response->redirect($this->url->link('checkout/cart'));
+    		}		if ($this->request->server['HTTPS']) {			$server = $this->config->get('config_ssl');		} else {			$server = $this->config->get('config_url');		}        if (is_file(DIR_IMAGE . $this->config->get('config_logo'))) {			$data['logo'] = $server . 'image/' . $this->config->get('config_logo');		} else {			$data['logo'] = '';		}
+    
+    		// Validate minimum quantity requirements.
+    		$products = $this->cart->getProducts();
+    
+    		foreach ($products as $product) {
+    			$product_total = 0;
+    
+    			foreach ($products as $product_2) {
+    				if ($product_2['product_id'] == $product['product_id']) {
+    					$product_total += $product_2['quantity'];
+    				}
+    			}
+    
+    			if ($product['minimum'] > $product_total) {
+    				$this->response->redirect($this->url->link('checkout/cart'));
+    			}
+    		}
+    
+    		$this->load->language('checkout/checkout');
+    
+    		$this->document->setTitle($this->language->get('heading_title'));
+    
+    		$this->document->addScript('catalog/view/javascript/jquery/datetimepicker/moment/moment.min.js');
+    		$this->document->addScript('catalog/view/javascript/jquery/datetimepicker/moment/moment-with-locales.min.js');
+    		$this->document->addScript('catalog/view/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.js');
+    		$this->document->addStyle('catalog/view/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.css');
+    
+    		// Required by klarna
+    		if ($this->config->get('payment_klarna_account') || $this->config->get('payment_klarna_invoice')) {
+    			$this->document->addScript('http://cdn.klarna.com/public/kitt/toc/v1.0/js/klarna.terms.min.js');
+    		}
+    
+    		$data['breadcrumbs'] = array();
+    
+    		$data['breadcrumbs'][] = array(
+    			'text' => $this->language->get('text_home'),
+    			'href' => $this->url->link('common/home')
+    		);
+    
+    		$data['breadcrumbs'][] = array(
+    			'text' => $this->language->get('text_cart'),
+    			'href' => $this->url->link('checkout/cart')
+    		);
+    
+    		$data['breadcrumbs'][] = array(
+    			'text' => $this->language->get('heading_title'),
+    			'href' => $this->url->link('checkout/checkout', '', true)
+    		);
+    
+    		$data['text_checkout_option'] = sprintf($this->language->get('text_checkout_option'), 1);
+    		$data['text_checkout_account'] = sprintf($this->language->get('text_checkout_account'), 2);
+    		$data['text_checkout_payment_address'] = sprintf($this->language->get('text_checkout_payment_address'), 2);
+    		$data['text_checkout_shipping_address'] = sprintf($this->language->get('text_checkout_shipping_address'), 3);
+    		$data['text_checkout_shipping_method'] = sprintf($this->language->get('text_checkout_shipping_method'), 4);
+    		
+    		if ($this->cart->hasShipping()) {
+    			$data['text_checkout_payment_method'] = sprintf($this->language->get('text_checkout_payment_method'), 5);
+    			$data['text_checkout_confirm'] = sprintf($this->language->get('text_checkout_confirm'), 6);
+    		} else {
+    			$data['text_checkout_payment_method'] = sprintf($this->language->get('text_checkout_payment_method'), 3);
+    			$data['text_checkout_confirm'] = sprintf($this->language->get('text_checkout_confirm'), 4);	
+    		}
+    
+    		if (isset($this->session->data['error'])) {
+    			$data['error_warning'] = $this->session->data['error'];
+    			unset($this->session->data['error']);
+    		} else {
+    			$data['error_warning'] = '';
+    		}
+    
+    		$data['logged'] = $this->customer->isLogged();
+    
+    		if (isset($this->session->data['account'])) {
+    			$data['account'] = $this->session->data['account'];
+    		} else {
+    			$data['account'] = '';
+    		}
+    
+    		$data['shipping_required'] = $this->cart->hasShipping();
+    
+    		$data['column_left'] = $this->load->controller('common/column_left');
+    		$data['column_right'] = $this->load->controller('common/column_right');
+    		$data['content_top'] = $this->load->controller('common/content_top');
+    		$data['content_bottom'] = $this->load->controller('common/content_bottom');
+    		$data['footer'] = $this->load->controller('common/footer');
+    		$data['header'] = $this->load->controller('common/header');
+    
+    		$this->response->setOutput($this->load->view('checkout/checkout', $data));
+	    }
+	}
+
+	public function country() {
+		$json = array();
+
+		$this->load->model('localisation/country');
+
+		$country_info = $this->model_localisation_country->getCountry($this->request->get['country_id']);
+
+		if ($country_info) {
+			$this->load->model('localisation/zone');
+
+			$json = array(
+				'country_id'        => $country_info['country_id'],
+				'name'              => $country_info['name'],
+				'iso_code_2'        => $country_info['iso_code_2'],
+				'iso_code_3'        => $country_info['iso_code_3'],
+				'address_format'    => $country_info['address_format'],
+				'postcode_required' => $country_info['postcode_required'],
+				'zone'              => $this->model_localisation_zone->getZonesByCountryId($this->request->get['country_id']),
+				'status'            => $country_info['status']
+			);
+		}
+
+		$this->response->addHeader('Content-Type: application/json');
+		$this->response->setOutput(json_encode($json));
+	}
+
+	public function customfield() {
+		$json = array();
+
+		$this->load->model('account/custom_field');
+
+		// Customer Group
+		if (isset($this->request->get['customer_group_id']) && is_array($this->config->get('config_customer_group_display')) && in_array($this->request->get['customer_group_id'], $this->config->get('config_customer_group_display'))) {
+			$customer_group_id = $this->request->get['customer_group_id'];
+		} else {
+			$customer_group_id = $this->config->get('config_customer_group_id');
+		}
+
+		$custom_fields = $this->model_account_custom_field->getCustomFields($customer_group_id);
+
+		foreach ($custom_fields as $custom_field) {
+			$json[] = array(
+				'custom_field_id' => $custom_field['custom_field_id'],
+				'required'        => $custom_field['required']
+			);
+		}
+
+		$this->response->addHeader('Content-Type: application/json');
+		$this->response->setOutput(json_encode($json));
+	}
+}

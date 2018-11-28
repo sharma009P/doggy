@@ -1,0 +1,59 @@
+2018-11-08 18:20:50 - Get Sample product feed
+2018-11-08 18:20:50 - Complete - Get Sample product feed
+2018-11-10 10:55:22 - Update products for availability change - 62
+2018-11-10 10:55:23 - Success update availability product 62 / 2232958643443898 on Facebook
+2018-11-10 10:55:23 - Complete - Update products for availability change - 62
+2018-11-10 11:01:32 - Update products for availability change - 62,69
+2018-11-10 11:01:33 - Success update availability product 62 / 2232958643443898 on Facebook
+2018-11-10 11:01:33 - Success update availability product 69 / 2234610826614306 on Facebook
+2018-11-10 11:01:33 - Complete - Update products for availability change - 62,69
+2018-11-14 5:26:40 - Update products for availability change - 69
+2018-11-14 5:26:41 - Success update availability product 69 / 2234610826614306 on Facebook
+2018-11-14 5:26:41 - Complete - Update products for availability change - 69
+2018-11-21 15:19:39 - Update products for availability change - 69
+2018-11-21 15:19:40 - Success update availability product 69 / 2234610826614306 on Facebook
+2018-11-21 15:19:40 - Complete - Update products for availability change - 69
+2018-11-23 10:36:47 - Get Sample product feed
+2018-11-23 10:36:47 - Complete - Get Sample product feed
+2018-11-23 15:04:00 - Get Sample product feed
+2018-11-23 15:04:00 - Complete - Get Sample product feed
+2018-11-23 15:04:14 - Sync all products
+2018-11-23 15:04:15 - Success update product 77 / 2132928420104844 on Facebook
+2018-11-23 15:04:16 - Success update product 73 / 1552658848170883 on Facebook
+2018-11-23 15:04:18 - Success update product 65 / 2349723821765925 on Facebook
+2018-11-23 15:04:19 - Success update product 62 / 2232958643443898 on Facebook
+2018-11-23 15:04:20 - Success update product 67 / 2038890299466489 on Facebook
+2018-11-23 15:04:21 - Success update product 66 / 2077805218966685 on Facebook
+2018-11-23 15:04:22 - Success update product 57 / 1791176740979830 on Facebook
+2018-11-23 15:04:23 - Success update product 68 / 2315177425221436 on Facebook
+2018-11-23 15:04:23 - Delete for products - 64
+2018-11-23 15:04:24 - Success delete product 64 / 2039165899439126 on Facebook
+2018-11-23 15:04:25 - Success delete product group 64 / 2039165886105794 on Facebook
+2018-11-23 15:04:25 - Complete - Delete for products - 64
+2018-11-23 15:04:26 - Success update product 60 / 2286983681331558 on Facebook
+2018-11-23 15:04:26 - Success update product 61 / 1890474457668189 on Facebook
+2018-11-23 15:04:27 - Success update product 59 / 2322891801086230 on Facebook
+2018-11-23 15:04:28 - Success update product 69 / 2234610826614306 on Facebook
+2018-11-23 15:04:29 - Success update product 78 / 2419713841377927 on Facebook
+2018-11-23 15:04:30 - Failure update product 72 / 1948450801858268 on Facebook {"message":"Unsupported post request. Object with ID '1948450801858268' does not exist, cannot be loaded due to missing permissions, or does not support this operation. Please read the Graph API documentation at https:\/\/developers.facebook.com\/docs\/graph-api","type":"GraphMethodException","code":100,"error_subcode":33,"fbtrace_id":"EA0bu2BWmA7"}
+2018-11-23 15:04:30 - {"success":true}
+2018-11-23 15:04:31 - Success update product 75 / 1888204581289094 on Facebook
+2018-11-23 15:04:32 - Success update product 74 / 1877406699024310 on Facebook
+2018-11-23 15:04:33 - Success update product 76 / 1938697669558200 on Facebook
+2018-11-23 15:04:33 - Complete - Sync all products
+2018-11-23 15:06:29 - Get Sample product feed
+2018-11-23 15:06:29 - Complete - Get Sample product feed
+2018-11-23 15:07:25 - Get Sample product feed
+2018-11-23 15:07:25 - Complete - Get Sample product feed
+2018-11-24 8:26:10 - Get Sample product feed
+2018-11-24 8:26:10 - Complete - Get Sample product feed
+2018-11-24 8:26:25 - Facebook Ads Extension version = 2.0.3
+2018-11-24 8:26:25 - OpenCart version = 3.0.2.0
+2018-11-24 8:26:25 - PHP version = 7.0.31
+2018-11-24 8:26:48 - Get Sample product feed
+2018-11-24 8:26:48 - Complete - Get Sample product feed
+2018-11-24 12:48:47 - Update products for availability change - 69
+2018-11-24 12:48:49 - Success update availability product 69 / 2234610826614306 on Facebook
+2018-11-24 12:48:49 - Complete - Update products for availability change - 69
+2018-11-24 20:47:25 - Get Sample product feed
+2018-11-24 20:47:25 - Complete - Get Sample product feed

@@ -1,0 +1,41 @@
+<div class="product-list-widget product-seller-list-widget {{settings.layout}} {{settings.extra_class}}">
+<div class="pavo-widget-text pa-element pa_text ">
+<div class="left-seller-spot">
+<img src="{{ settings.seller['avatar'] }}">
+</div>
+<div class="right-seller-spot">
+<h2><small>SELLER ON SPOTLIGHT</small> {{settings.seller.firstname}}  {{settings.seller.lastname}}</h2>
+{{settings.seller.shortprofile | raw}}
+<a href="{{settings.shoplink}}">Explore {{settings.seller.screenname}} Shop</a>
+</div>
+</div>
+</div>
+<div class="product-list-widget seller-product-list-section seller-p-list {{settings.layout}} {{settings.extra_class}}">
+   {% if settings.title_product %}
+	<div class="widget-title"><h3>{{ settings.title_product }}</h3></div>
+	{% endif %}	
+	{% if settings.subtitle_product and settings.subtitle_product != '<p><br></p>' %}
+	<div class="widget-description">{{ settings.subtitle_product }}</div>
+	{% endif %}	
+	<div class="product-list-layout">
+		 {% for product in settings.products %}
+
+			 <div class="media">
+			  <div class="media-left">
+			   	<div class="image"><a href="{{ product.href }}"><img src="{{ product.thumb }}" alt="{{ product.name }}" title="{{ product.name }}" class="img-responsive" /></a></div>
+			  </div>
+			  <div class="media-body">
+			    <h4 class="media-heading"><a href="{{ product.href }}">{{ product.name }}</a></h4>
+			     <h5 class="seller-name"><a href="{{ product.href }}">by {{settings.seller.screenname}}</a></h5>				
+			    {% if product.price %}
+			    <p class="price"> {% if not product.special %}
+			      {{ product.price }}
+			      {% else %} <span class="price-new">{{ product.special }}</span> <span class="price-old">{{ product.price }}</span> {% endif %}
+			     </p>
+			    {% endif %} 
+			  </div>
+			</div>
+
+		{% endfor %}
+	</div>
+</div>	 

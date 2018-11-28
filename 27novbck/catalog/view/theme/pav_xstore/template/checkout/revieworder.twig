@@ -1,0 +1,811 @@
+{{ header }}
+
+{% if not redirect %}
+
+{##}
+    <div class="row">
+     <div class="review-tab-step">
+         
+      <div class="col-sm-8">
+          <div class="review-tab-left">
+              <div class="review-data">
+    <div class="row">
+    
+        <div class="col-sm-12">
+        	<h2 class="review-title">Please Review and submit your order</h2>
+        </div>
+   <div class="address-part-ship">
+      <div class="col-sm-6">
+          
+          <div class="shiiping-address-part">
+            <strong>Shipping Address</strong>
+            <a href="javascript:void(0)" class="editaddress">Change</a>
+            <div id="changeaddresspopup" class="modal fade" role="dialog">
+			  <div class="modal-dialog">
+			    <div class="modal-content">
+			      <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Enter an address</h4>
+			       
+			      </div>
+			      <div class="modal-body">
+			        <!-- start square form -->
+
+			        	     <div class="shipping-edit-step">
+							  <div class="col-sm-12">
+							    <fieldset id="account" class="test">
+							        <!-- Postcode Field -->						     
+								  
+							        <div class="row">
+							       <div class="col-md-4 required">
+							      <div class="form-group">
+							        <label class="control-label" for="input-payment-postcode">Post Code</label>
+							        <div id="postcode_lookup"></div>
+							        <input name="postcode" value="" placeholder="Post Code" id="postcode" class="form-control" type="hidden">
+							        <input name="address3" value="" placeholder="Post Code" id="line3" class="form-control" type="hidden">
+							      </div>
+							      </div>
+							      </div>
+							      <div class="form-group">
+							        <label class="control-label" for="input-payment-firstname">Full name</label>
+							        <input name="f_name" value="" placeholder="First Name" id="input-payment-firstname" class="form-control" type="text">
+							      </div>
+
+							          </fieldset>
+							  </div>
+							  <div class="col-sm-12">
+							    <fieldset id="address">
+							     <!--  <legend>Your Address</legend> -->
+
+								 <div class="row"> 
+								 <div class="col-md-6">
+							   <div class="form-group">
+							        <label class="control-label" for="input-payment-address-2">House Name/Number</label>
+							        <input name="add_2" value="" placeholder="Address 2" id="line2" class="form-control" type="text">
+							      </div> 
+							      </div> 
+								 <div class="col-md-6">
+							      <div class="form-group">
+							        <label class="control-label" for="input-payment-address-1">Street Address</label>
+							        <input name="add_1" value="" placeholder="Address 1" id="line1" class="form-control" type="text">
+							      </div>
+							      </div>
+								   
+							 <div class="col-md-4">
+							      <div class="form-group">
+							        <label class="control-label" for="input-payment-city">City</label>
+							        <input name="city" value="" placeholder="Town" id="town" class="form-control" type="text">
+							      </div>
+							      </div>	  
+								  
+							 <div class="col-md-4" style="display:none">
+							      <div class="form-group">
+							        <label class="control-label" for="input-payment-zone">County</label>
+							        <select name="add_country" id="input-payment-zone" class="form-control">
+							        	 
+							        	 <option value="0">{{ text_select }}</option>
+          
+          
+										         {% for country in countries %}
+										         
+										          {% if country.country_id == country_id %}
+										          
+										          
+										          <option value="{{ country.country_id }}" selected="selected">{{ country.name }}</option>
+										          
+										          
+										          {% else %}
+										          
+										          
+										          <option value="{{ country.country_id }}">{{ country.name }}</option>
+										          
+										          
+										          {% endif %}
+										          {% endfor %}
+
+							        </select>
+							      </div>
+							      </div>
+								  </div>
+								  
+							          </fieldset>
+							   
+							     </div>
+                   
+							    
+
+							</div>
+										        <!-- end square form -->
+			      </div>
+
+            <div class="modal-footer">
+         <button type="button"  id="s_add" class="btn btn-default">Save</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+      </div>
+			        
+			    </div>
+			  </div>
+			</div>
+           
+            <p class="address-part">
+          
+          {{ shipping_firstname }}<br>
+          {{ address_1 }} <br>
+          {{ address_2 }}<br>
+          <!-- {{ country }} --><br>
+          
+      </p>
+      </div>
+      
+
+      
+      <div class="email-part">
+          
+          <strong>Email Address</strong>
+       <a href="javascript:void(0)" class="editemail">Change</a>
+       <div id="changeemailpopup" class="modal fade" role="dialog">
+			  <div class="modal-dialog">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			         <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Change your email address</h4>
+			      </div>
+			        <div class="modal-body">
+			        <!-- start square form -->
+              <div class="email-edit-step">
+						<div class="col-sm-12">
+							    <fieldset id="email">
+							     <!--  <legend>Your Address</legend> -->
+
+								 <div class="row"> 
+								 <div class="col-md-12">
+							   <div class="form-group">
+							        <label class="control-label" for="input-payment-address-2">Email</label>
+							        <input name="s_email" value="" placeholder="email" class="form-control" type="email">
+							      </div> 
+							      </div> 
+							
+								   
+							  
+						
+								  </div>
+								  
+							          </fieldset>
+                        
+							     </div>
+                 </div>
+                 
+			        	    
+					<!-- end square form -->
+			       </div>
+              <div class="modal-footer">
+        <!--  <button type="button"  id="s_add" class="btn btn-default">Save</button> -->
+                           <button type="button"  id="e_add" class="btn btn-default">Save</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+      </div>
+			        
+			    </div>
+			  </div>
+			</div>
+              
+          <p class="ship_email_part">{{ guest_email }}</p>
+          
+      </div>
+      
+     
+      </div>
+        
+             <div class="col-sm-6">
+           <div class="method-payment">
+            
+         <h2><strong>Payment Method</strong></h2>
+         <!--  <a href="javascript:void(0)" class="editcarddetails">Change</a> -->
+         <div class="master-card-data">
+             {% if card_details.card_brand == 'VISA' %}
+               <img src="https://doggy.co.uk/image/visa._CB393363241_.png" class="master-card">
+             {% endif %}
+
+              {% if card_details.card_brand == 'MASTERCARD' %}
+               <img src="https://doggy.co.uk/image/mc._CB393363241_.gif" class="master-card">
+             {% endif %}
+
+             <p>{{card_details.card_brand }}  : ....{{card_details.last_4 }}</p>
+             <p>exp: {{card_details.exp_month }}/{{card_details.exp_year }}</p>
+
+              
+         </div>
+    
+      </div>
+      </div>
+      </div>
+</div>
+</div>
+<div class="review-product">
+<div class="row">
+    
+      <div class="col-sm-12">
+    {#      <table class="table table-hover">#}
+    {#<thead>#}
+    {#  <tr>#}
+    {#    <td class="text-left">{{ column_name }}</td>#}
+    {#    <!--td class="text-left">{{ column_model }}</td-->#}
+    {#    <td class="text-right">{{ column_quantity }}</td>#}
+    {#    <!--td class="text-right">{{ column_price }}</td-->#}
+    {#    <td class="text-right">{{ column_total }}</td>#}
+    {#  </tr>#}
+    {#</thead>#}
+    {#<tbody>#}
+    
+    {% for product in products %}
+    <div class="products-data">
+    <div class="col-sm-4">
+        <div class="image-tab">
+        <img class="review_p_img" src="{{ product.image }}">
+        </div>
+        
+        </div>
+    <div class="col-sm-8">
+        <div class="content-part">
+        
+        <a href="{{ product.href }}">{{ product.name }}</a>
+    {% for option in product.option %} <br />
+    <small> - {{ option.name }}: {{ option.value }}</small>
+     {% endfor %}
+     <br />
+     {#<span class="label label-info">{{ text_recurring_item }}</span> <small>{{ product.recurring }}</small>#}
+     <p> <span class="quantity-content">Quantity: {{ product.quantity }}</span><span class="price-content">{{ product.price }}</span></p>
+    
+     
+     </div>
+    </div>
+    </div>
+    {#  <td class="text-left"><a href="{{ product.href }}">{{ product.name }}</a> #}
+    {#    {% if product.recurring %} <br />#}
+    {#    {% endif %}</td>#}
+    {#  <!--td class="text-left">{{ product.model }}</td-->#}
+    {#  <td class="text-right">{{ product.quantity }}</td>#}
+    {#  <!--td class="text-right">{{ product.price }}</td-->#}
+    {#  <td class="text-right">{{ product.total }}</td>#}
+    {#</tr>#}
+    {% endfor %}
+    {#{% for voucher in vouchers %}#}
+    {#<tr>#}
+    {#  <td class="text-left">{{ voucher.description }}</td>#}
+    {#  <td class="text-left"></td>#}
+    {#  <td class="text-right">1</td>#}
+    {#  <td class="text-right">{{ voucher.amount }}</td>#}
+    {#  <td class="text-right">{{ voucher.amount }}</td>#}
+    {#</tr>#}
+    {#{% endfor %}#}
+  {#    </tbody>#}
+    
+  {#  <tfoot>#}
+    
+  
+  {#    </tfoot>#}
+    
+  {#</table>#}
+  
+
+          </div>
+         <!--  <div class="col-sm-12">
+              <div class="seller-note">
+               <textarea name="sellernote" placeholder="Add a note to the seller"></textarea>
+              </div>
+          </div> -->
+          </div>
+          </div>
+</div>
+    
+     
+          </div>
+          </div>
+          
+          <div class="col-sm-4">
+               <div class="review-tab-right">
+              <table>
+                {% for total in totals %}
+    <tr>
+      <td width="50%" colspan="2" class="text-left"><strong>{{ total.title }}:</strong>
+    
+      </td>
+      <td width="50%" class="text-right">{{ total.text }}</td>
+    </tr>
+     {% if total.title == 'Item(s) total' %} 
+			   <tr> <td class="text-left"><strong>Shipping:<br></strong></td>
+              <td class="text-right">£0.00 </td> </tr>
+			  {% endif %}
+    {% endfor %}
+     </table>
+     <input type="button" value="Pay Now" id="button-pay" data-loading-text="{{ text_loading }}" class="btn btn-primary" />
+          </div>
+          </div>
+          
+          
+          
+          </div>
+          </div>
+          <div id="esquareModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+       
+      </div>
+      <div class="modal-body">
+        <!-- start square form -->
+        <div class="row">
+    <div class="sqare-payment-step">
+<form id="payment" class="form-horizontal">
+  <fieldset>
+    <legend>
+     {{ text_card_details }}
+      &nbsp;
+      <img id="loading-icon" src="data:image/gif;base64,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"/>
+    </legend>
+    
+     
+  
+    <div id="new-card">
+         <div class="col-md-12">
+        <div class="row">
+        <div class="col-md-12">
+        
+      <div class="form-group">
+        <label class="control-label">{{ text_card_number }}</label>
+        
+        <div class="row card-num">
+
+      <div class="col-md-1">
+         <span class="cc-icon ss-icon ss-creditcard ss-svg default-card" aria-hidden="true">
+           <img src="https://doggy.co.uk/image/card_mg.jpg">
+        </span>
+  </div>
+  <div class="col-md-11">
+      
+          <input type="text" id="card-number" class="form-control car-number-16" disabled="disabled" value="" /></td>
+          </div>
+          </div>
+      
+      </div>
+      </div>
+      </div>
+   <div class="row">
+       <div class="card-ecp-sec">
+        <div class="col-md-5">
+      <div class="form-group">
+          
+          
+        <label class="control-label">{{ text_card_expiry }}</label>
+  
+    
+ 
+  
+          <input type="text" id="card-expiry" class="form-control" value="" />
+          
+      
+      </div>
+      </div>
+       <div class="col-md-2">
+            <div class="form-group">
+        
+        <label class="control-label security-label">CSV Code</label>
+      
+          <input type="text" id="card-security" class="form-control" disabled="disabled" value="" />
+        
+      
+      </div>
+           </div>
+           <div class="col-md-1">
+            <img class="question_img" src="https://doggy.co.uk/image/question.png" title="Last 3 digits on the reverse of your card.">
+           </div>
+           </div>
+      </div>
+      
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card-postcard-field">
+        <div class="form-group">
+        <label class="control-label">{{ text_card_postcode }}</label>
+        
+          <input type="text" id="card-postcode" class="form-control" disabled="disabled" value="" />
+      
+      </div>
+      </div>
+      </div>
+            </div>
+            <div class="row">
+            <div class="col-md-12">
+                <div class="card-holder">
+        <div class="form-group">
+        <label class="control-label">Name on card</label>
+        
+          <input type="text" id="card-name" class="form-control" value="" />
+      
+      </div>
+      </div>
+      </div>
+            </div>
+      <div class="row">
+       
+           <div class="checkbox">
+  <label class="container">
+  <input type="checkbox" name="billing_address_set" value="1" checked="checked" >
+  <span class="checkmark"></span>
+    <span>My Billing address is the same as my shipping address</span>
+    <font>{{ shipping_address_field }}</font>
+    </label>
+</div>
+          
+            </div>
+            </div>
+    </div>
+  </fieldset>
+</form>
+
+</div>
+</div>
+<div class="row">
+<div class="buttons">
+  <div class="right pull-right">
+    <a id="button-confirm" onclick="confirmOrder()" class="{{ settings.button_class }}" style="{{ settings.button_styling }}">Continue to Payment
+      
+    </a>
+
+  </div>
+</div>
+</div>
+        <!-- end square form -->
+      </div>
+        
+    </div>
+  </div>
+</div>
+<a href="javascript:void()" data-toggle="modal" style="display:none;" data-target="#esquareModal" class="btn btn-primary proceedesquareModal">Proceed to change</a>
+<script type="text/javascript">
+    $('#postcode_lookup').getAddress({
+        api_key: 'XxTK-LOIC-nFz2-lHYF',
+        // Prevents the organisation from appearing within address line1
+        line1_no_organisation: 'true',
+        output_fields: {
+            organisation: '#organisation',
+            line1: '#line1',
+            line2: '#line2',
+            Country: '#line3',
+            town: '#town',
+            postcode: '#postcode',
+        }
+    })
+</script>
+          <script>
+
+          
+
+          	  		{% if settings.transaction_mode == 'production' %}
+		if (window.location.protocol != 'https:') {
+			displayError('You are in LIVE mode but are not on a secure (https) connection! Payment info is not secure!');
+		}
+	{% endif %}
+	
+	var square_errors = {
+					cardNumber: '',
+					expirationDate: '',
+					postalCode: '',
+					cvv: '',
+					missing_card_data: '',
+					unknown: '',
+			}
+
+
+	
+	
+	$('#selected-card').change(function(){
+		if (!$('#selected-card').val()) {
+			$('#delete-card').hide(); 
+			$('#new-card').slideDown();
+		} else {
+			$('#delete-card').show();
+			$('#new-card').slideUp();
+		}
+	}).change();
+	
+	var paymentForm;
+	
+	$.getScript('https://js.squareup.com/v2/paymentform', function(data) {
+		paymentForm = new SqPaymentForm({
+			applicationId: 'sandbox-sq0idp-Xhv6AcxAGbaJzfCRd10NNw',
+			inputClass: 'sq-input',
+			inputStyles: [
+				{
+					fontSize: '14px'
+				}
+			],
+			cardNumber: {
+				elementId: 'card-number',
+				inputClass: 'sq-input',
+			},
+			cvv: {
+				elementId: 'card-security',
+			},
+			expirationDate: {
+				elementId: 'card-expiry',
+				placeholder: 'MM/YY',
+				inputClass: 'exp-input',
+			},
+			
+	    	 postalCode: {
+		    	elementId: 'card-postcode'
+			},
+			callbacks: {
+				cardNonceResponseReceived: function(errors, nonce, cardData) {
+				   var postal_code = 'RM8 2QL';
+
+				  var billing_address_set =  $('input:checkbox[name=billing_address_set]').is(':checked');
+                    	  if(billing_address_set == true){
+                    	       billing_address_set = 1;
+                    	  }else{
+                    	       billing_address_set = 0;
+                    	  }
+				
+				var cardname =  $('#card-name').val();
+				
+					if (errors) {
+						errors.forEach(function(error) {
+							err = (error.field) ? error.field : error.code;
+							displayError(square_errors[err] ? square_errors[err] : error.message);
+						});
+					} else {
+						createCharge('', nonce, postal_code ,billing_address_set,cardData,cardname);
+					}
+				},
+				unsupportedBrowserDetected: function() {
+					alert('Your browser is not supported for this payment method.');
+				},
+				paymentFormLoaded: function() {
+					$('#loading-icon').remove();
+					paymentForm.setPostalCode('RM8 2QL');
+				},
+			}
+		})
+		paymentForm.build();
+	});
+          	 
+function displayWait() {
+	alert('please wair');
+		$('#button-confirm').removeAttr('onclick').attr('disabled', 'disabled');
+		$('#selected-card, #delete-card').attr('disabled', 'disabled');
+		$('.alert').remove();
+		$('#payment').append('<div class="attention alert alert-warning" style="display: none"><i class="fa fa-spinner fa-spin"></i> &nbsp; Please wait</div>');
+		$('.attention').fadeIn();
+	}
+	
+	function displayError(message) {
+		if (typeof triggerLoadingOff == 'function') triggerLoadingOff(); // Journal fix
+		$('#button-confirm').attr('onclick', 'confirmOrder()').removeAttr('disabled');
+		$('#selected-card, #delete-card').removeAttr('disabled');
+		$('.alert').remove();
+		$('#payment').append('<div class="warning alert alert-danger" style="display: none"><i class="fa fa-exclamation-triangle"></i> &nbsp; ' + message.trim() + '</div>');
+		$('.warning').fadeIn();
+	}
+	
+	function deleteCard(id) {
+		if (!confirm('This operation cannot be done. Continue?')) return;
+		$.ajax({
+			url: 'index.php?route=extension/payment/square/deleteCard&id=' + id,
+			beforeSend: function() {
+				displayWait();
+			},
+			success: function(error) {
+				if (error.trim()) {
+					displayError('Error: ' + error);
+				} else {
+					$('.' + id + ', .alert').remove();
+					alert('success');
+				}
+				$('#button-confirm').attr('onclick', 'confirmOrder()').removeAttr('disabled');
+				$('#selected-card').removeAttr('disabled').change();
+			}
+		});
+	}
+
+	function confirmOrder() {
+	  var billing_address_set =  $('input:checkbox[name=billing_address_set]').is(':checked');
+	  if(billing_address_set == true){
+	       billing_address_set = 1;
+	  }else{
+	       billing_address_set = 0;
+	  }
+	  	var cardname =  $('#card-name').val();
+		displayWait();
+		if ($('#new-card').is(':visible')) {
+		    alert('if');
+			paymentForm.requestCardNonce();
+		} else {
+		    alert('else');
+			createCharge($('#selected-card').val(), '', '',billing_address_set,'',cardname);
+		}
+	}
+	
+	
+	
+	var charging = false;
+	
+	function createCharge(card_id, nonce, postcode,billing_address_set,cardData,cardname) {
+	   
+		if (charging) return;
+		$.ajax({
+			type: 'POST',
+			url: 'index.php?route=extension/payment/square/createCharge',
+			data: {card_id: card_id, nonce: nonce, postcode: postcode, store_card: $('#store-card').is(':checked'),billing_address_set: billing_address_set,cardData:cardData,cardname:cardname},
+			beforeSend: function() {
+				charging = true;
+			},
+			success: function(error) {
+       
+				$('#esquareModal').modal('hide');
+				charging = false;
+				if (error.trim()) {
+					alert('error');
+					displayError(error);
+				} else {
+				    $.ajax({
+                    url: 'index.php?route=checkout/revieworder',
+                    dataType: 'html',
+                    complete: function() {
+                        $('#button-payment-method').button('reset');
+                    },
+                    success: function(html) {
+                     
+                     $('.step3and4').css("display", "none");
+                        $('#collapse-checkout-confirm .panel-body').html(html);
+
+						//$('#collapse-checkout-confirm').parent().find('.panel-heading .panel-title').html('<a href="#collapse-checkout-confirm" data-toggle="collapse" data-parent="#accordion" class="accordion-toggle">{{ text_checkout_confirm }} <i class="fa fa-caret-down"></i></a>');
+   
+						//$('a[href=\'#collapse-checkout-confirm\']').trigger('click');
+						 //$('#menu1').removeClass('active');
+						 //$('.Review').addClass('active');
+					},
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+                    }
+                });
+				
+				//	completeOrder();
+				}
+			},
+			error: function(xhr, status, error) {
+				displayError(xhr.responseText ? xhr.responseText : error);
+			}
+		});
+	}
+	
+	function completeOrder() {
+		$.ajax({
+			url: 'index.php?route=extension/payment/square/completeOrder',
+			success: function(error) {
+				if (error.trim()) {
+					completeWithError(error.trim());
+				} else {
+				    alert('sfsdfs');
+				
+				      
+				}
+			},
+			error: function(xhr, status, error) {
+				completeWithError(xhr.responseText ? xhr.responseText : error);
+			}
+		});
+	}
+	
+	function completeWithError(errorMessage) {
+		$.ajax({
+			type: 'POST',
+			url: 'index.php?route=extension/payment/square/completeWithError',
+			data: {error_message: errorMessage},
+			success: function(error) {
+				if (error.trim()) {
+					triggerFatalError(error);
+				} else {
+				alert('checkout url');
+				}
+			},
+			error: function(xhr, status, error) {
+				triggerFatalError(xhr.responseText ? xhr.responseText : error);
+			}
+		});
+	}
+	
+	function triggerFatalError(errorMessage) {
+		$('.alert').remove();
+		$('#payment').append('<div class="warning alert alert-danger"><i class="fa fa-exclamation-triangle"></i> <strong>Fatal Error:</strong> Your payment was completed successfully, but the system encountered a fatal error when trying to complete your order. Please do not resubmit your order! Instead, please <a target="_blank" href="index.php?route=information/contact">contact the store administrator</a> with your order number ({{ order_id }}) and the following error message:<br /><br />' + errorMessage.trim() + '</div>');
+	}
+          	  // 
+ 
+             $(document).ready(function(){
+                $('.editcarddetails').click(function(){
+                
+                  $('.proceedesquareModal').trigger('click');
+
+
+                });
+           });
+              $(document).ready(function(){
+                $('.editaddress').click(function(){
+                    $('#changeaddresspopup').modal('show');
+                    // $('#edit_address').toggleClass('hide');
+                    // $('.address-part').toggleClass('hide');
+                });
+                $('#s_add').click(function(){
+                    var f_name = $('input[name=f_name]').val();
+                    var add_1 = $('input[name=add_1]').val();
+                    var add_2 = $('input[name=add_2]').val();                    
+                    var city = $('input[name=city]').val();
+                    var postcode = $('input[name=postcode]').val();
+                    var add_country = $("select[name=add_country]").find("option:selected").val();
+                   
+                    $.ajax({
+                        url: 'index.php?route=extension/payment/square/change_address',
+                        type: 'post',
+                        data: {f_name:f_name,add_1:add_1,add_2:add_1,add_country:add_country,city:city,postcode,postcode},
+                        success: function(json) {
+                           // location = successurl;
+                            $('#changeaddresspopup').modal('hide');
+                          var html = '';
+                            html += json['full_name']+'<br>';
+                            html += json['address_1']+'<br>';
+                            html += json['address_2']+'<br>';
+                            html += json['country']+'<br>';
+                             $('.address-part').html(html);
+                             $("#input-payment-country option[value='"+json['country_id']+"']").attr("selected", "selected");
+                              $('#edit_address').toggleClass('hide');
+                            $('.address-part').toggleClass('show');
+                          
+                        },
+                        error: function(xhr, ajaxOptions, thrownError) {
+                            alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+                        }
+                    });
+                });
+                
+              });
+              
+               $(document).ready(function(){
+                $('.editemail').click(function(){
+                	$('#changeemailpopup').modal('show');
+                    // $('#edit_email').toggleClass('hide');
+                    // $('.ship_email_part').toggleClass('hide');
+                });
+                $('#e_add').click(function(){
+                    var s_email = $('input[name=s_email]').val();
+                
+                    // alert(add_country);
+                    $.ajax({
+                        url: 'index.php?route=extension/payment/square/change_ship_email',
+                        type: 'post',
+                        data: {s_email:s_email},
+                        success: function(json) {
+                           // location = successurl;
+                              $('#changeemailpopup').modal('hide');
+                          var html = '';
+                            html += json['email']+'<br>';
+                           
+                             $('.ship_email_part').html(html);
+                              $('#edit_email').toggleClass('hide');
+                            $('.ship_email_part').toggleClass('show');
+                          
+                        },
+                        error: function(xhr, ajaxOptions, thrownError) {
+                            alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+                        }
+                    });
+                });
+                
+              });
+          </script>
+{##}
+{% else %} 
+<script type="text/javascript">
+<!--
+location = '{{ redirect }}';
+//--></script> 
+{% endif %} 
+

@@ -1,0 +1,88 @@
+<div class="col-nopadding">
+  <!--<h3>{{ heading_title }}</h3>-->
+  <h3>Bestseller on Doggy</h3>
+  <div class="row">
+    {% set i = 1 %}
+   {% for product in products %}
+    <div class="product-layout col-lg-2 col-md-2 col-sm-4 col-xs-6">
+      <div class="product-thumb transition">
+        <div class="image"><a href="{{ product.href }}"><img src="{{ product.thumb }}" alt="{{ product.name }}" title="{{ product.name }}" class="img-responsive" /></a></div>
+        <div class="product-meta clearfix">
+          <div class="caption">
+            <h4 class="name"><a href="{{ product.href }}">{{ product.name }}</a></h4>
+            <h5>
+                {% if product.front_company_name %}
+                    <!--<a href="{{product.sellerhref}}">by {{ product.front_company_name }}</a>-->
+                    by {{ product.front_company_name }}
+                {% else %}   
+                    <!--<a href="{{product.sellerhref}}">by {{product.sellername}}</a>-->
+                    by {{product.sellername}}
+                {% endif %}
+            </h5>
+            <!--<p class="description">{{ product.description }}</p>-->
+            <!--{% if product.rating %}
+            <div class="rating">
+              {% for i in 1..5 %}
+              {% if product.rating < i %}
+              <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-1x"></i></span>
+              {% else %}
+              <span class="fa fa-stack"><i class="fa fa-star fa-stack-1x"></i><i class="fa fa-star-o fa-stack-1x"></i></span>
+              {% endif %}
+              {% endfor %}
+            </div>
+            {% endif %}-->
+            <div class="group-action">
+              {% if product.price %}
+              <!--<div class="price">-->
+              <div class="price_div">
+                {% if not product.special %}
+                {{ product.price }}
+                {% else %}
+                <span class="price-new">{{ product.special }}</span> <span class="price-old">{{ product.price }}</span>
+                {% endif %}
+              </div>
+              {% endif %}
+              <!--<div class="button-group">
+                    <button class="btn btn-cart" type="button" onclick="cart.add('{{ product.product_id }}');"><i class="fa fa-shopping-cart"></i> <span class="hidden-xs hidden-sm hidden-md">{{ button_cart }}</span></button>
+                    <button class="btn btn-wishlist" type="button" data-toggle="tooltip" title="{{ button_wishlist }}" onclick="wishlist.add('{{ product.product_id }}');"><i class="fa fa-heart"></i></button>
+                    <button class="btn btn-compare" type="button" data-toggle="tooltip" title="{{ button_compare }}" onclick="compare.add('{{ product.product_id }}');"><i class="fa fa-exchange"></i></button>
+                  </div>-->
+            </div>
+            {% if product.rating %}
+                
+                 <div class="rating-custom">
+                    {% for i in 1..5 %} 
+
+                        {% if product.rating < i %} <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-1x"></i></span> {% else %} <span class="fa fa-stack"><i class="fa fa-star fa-stack-1x"></i><i class="fa fa-star-o fa-stack-1x"></i></span> {% endif %}
+            
+                  {% endfor %}
+                  <span class="total_ratings">({{product.reviews}})</span>
+                 </div>
+            {% endif %}
+            
+            {% if product.best_seller == 1 %}
+                <div class="bestseller_icon">
+                    <img src="./image/best-seller.png"/>
+                </div>
+            {% endif %}
+            
+            {% if product.free_shipping == 1 %}
+                <div class="free_shipping_icon">
+                    <img src="./image/free-shipping.png"/>
+                </div>
+            {% endif %}
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    {% if(i%3 == 0)  %}
+        <div class="visible-sm clearfix"></div>
+    {% endif %}
+    {% if(i%2 == 0)  %}
+        <div class="visible-xs clearfix"></div>
+    {% endif %}
+    {% set i = i+1 %}
+    {% endfor %}
+  </div>
+</div>

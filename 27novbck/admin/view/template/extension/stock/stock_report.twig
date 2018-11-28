@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html dir="{{ direction }}" lang="{{ lang }}">
+<head>
+<meta charset="UTF-8" />
+<title>{{ sm_heading_report_title }}</title>
+<base href="{{ base }}" />
+<link href="view/javascript/bootstrap/css/bootstrap.css" rel="stylesheet" media="screen" />
+<script type="text/javascript" src="view/javascript/jquery/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="view/javascript/bootstrap/js/bootstrap.min.js"></script>
+<link href="view/javascript/font-awesome/css/font-awesome.min.css" type="text/css" rel="stylesheet" />
+<link type="text/css" href="view/stylesheet/stylesheet.css" rel="stylesheet" media="screen" />
+</head>
+<body>
+<div class="container" style="margin-top: 10px;">
+
+{% if products|length > 0 %}
+<form id="form" action="{{ stock_module_report_xl_link }}" method="post">
+<input type="hidden" name="module_stock_report_limit" value="{{ module_stock_report_limit }}"/>	
+</form>
+<button id="xl_report_button" class="btn btn-primary pull-right"><i class="fa fa-file-excel-o"> </i>{{ " " ~ sm_button_stock_report_xl }}</button>
+{% endif %}
+
+
+<h1>{{ sm_text_stock_available }}</h1>
+{% if products|length <= 0 %}
+	<table class="table table-bordered">
+			<tr><td align="center">{{ text_no_results }}</td></tr>
+	</table>
+{% else %}
+	
+{% for product in products %}
+		<table class="table table-bordered">
+		<tr class="heading">
+			<td width="60%"><strong>{{ product.product_id ~ " - " ~ product.name ~ " - " ~ product.model }}</strong></td>
+			<td width="20%" align="center"><strong>{{ sm_column_sku }}</strong></td>  
+			<td width="20%" align="center"><strong>{{ sm_column_quantity }}</strong></td>  
+		</tr>
+		{%for combination in product.combinations %}
+			<tr>
+				<td width="60%">{{ combination.option_value_names|join('-') }}</td>
+				<td width="20%" align="center">{{ combination.sku }}</td>  
+				<td width="20%" align="center">{{ combination.quantity }}</td>  
+			</tr>
+		{% endfor %}
+		</table>
+{% endfor %}
+	
+{% endif %}
+</div>
+<script type="text/javascript">
+	$('#xl_report_button').click(function() {
+		$('#form').submit();
+	});
+</script>
+
+</body>
+</html>

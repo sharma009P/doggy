@@ -1,0 +1,45 @@
+
+				{% if module_wgtm_status %}
+					{% if wgtms and wgtms %}
+					{% set position = 1 %}
+					<script>
+						dataLayer.push({
+							'event':'enhanceEcom productImpression',
+							'ecommerce': {
+								'currencyCode': "{{ wcurencysymbol }}",
+								'impressions': [
+									{% for wgtm in wgtms %}
+									{% if position > 1 %},{% endif %}{
+									'name': "{{ wgtm['name'] }}",
+									'id': "{{ wgtm['product_id'] }}",
+									'price': "{{ wgtm['price'] }}",
+									'brand': "{{ wgtm['manufacturer'] }}",
+									'category': "{{ wgtm['categories'] }}",
+									'list': "{{ wmodulename }}",
+									'position': "{{ position }}"
+									}
+									{% set position = position + 1 %}
+									{% endfor %}
+								]
+							}
+						});
+					</script>
+					{% endif %}
+				{% endif %}
+			
+<h3>{{ heading_title }}</h3>
+<div class="row product-layout">{% for product in products %}
+  <div class="col-lg-3 col-md-3s col-sm-6 col-xs-12">
+    <div class="product-thumb transition">
+      <div class="image"><a target="_blank" 
+				href="{{ product.href }}" {% if module_wgtm_status %} onclick="productclick('{{ product['product_id'] }}', '{{ product['href'] }}'); return false" {% endif %}
+			><img src="{{ product.thumb }}" alt="{{ product.name }}" title="{{ product.name }}" class="img-responsive" /></a></div>
+      <div class="caption">
+        <p><a 
+				href="{{ product.href }}" {% if module_wgtm_status %} onclick="productclick('{{ product['product_id'] }}', '{{ product['href'] }}'); return false" {% endif %}
+			>{{ product.name }}</a></p>
+        <p class="price">{{ product.price }}</p>
+      </div>
+    </div>
+  </div>
+  {% endfor %} <img src="{{ tracking_pixel }}" height="0" width="0" /> </div>

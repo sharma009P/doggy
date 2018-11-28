@@ -1,0 +1,400 @@
+{{ header }}{{ separate_column_left }}
+{% if separate_view is defined and separate_view %}
+  <div class="container-fluid" id="content" style="margin-left: 18%">
+{% else %}
+  <div class="container">
+{% endif %}
+  <ul class="breadcrumb">
+    {% for breadcrumb in breadcrumbs %}
+    <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+    {% endfor %}
+  </ul>
+
+  {% if error_warning %}
+    <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i>{{ error_warning}}</div>
+  {% endif %}
+  {% if success %}
+    <div class="alert alert-success"><i class="fa fa-check-circle"> </i> {{ success}}</div>
+  {% endif %}
+
+  <div class="row">{{ column_left }}
+    {% if column_left and column_right %}
+    {% set class = 'col-sm-6' %}
+    {% elseif column_left or column_right %}
+    {% set class = 'col-sm-9' %}
+    {% else %}
+    {% set class = 'col-sm-12' %}
+    {% endif %}
+
+  <div id="content" class="{{ class}}">
+    {{ content_top}}
+    <h1>
+      {{ heading_title_productlist }}
+      <div class="pull-right">
+        <a href="{{ insert}}" data-toggle="tooltip" title="{{ button_insert}}" class="btn btn-primary"><i class="fa fa-plus"></i></a>
+        <a onclick="$('#form-product').submit();" data-toggle="tooltip" class="btn btn-danger"  title="{{ button_delete}}"><i class="fa fa-trash-o"></i></a>
+      </div>
+    </h1>
+
+    <fieldset>
+      <legend><i class="fa fa-list"></i> {{ heading_title_productlist }}</legend>
+      {% if isMember %}
+      <div class="well">
+        <div class="row">
+          <div class="col-sm-4">
+            <div class="form-group">
+              <label class="control-label" for="input-name">{{ column_name}}</label>
+              <div class='input-group'>
+                <input type="text" name="filter_name" value="{{ filter_name}}" placeholder="{{ column_name}}" id="input-name" class="form-control" />
+                <span class="input-group-addon"><span class="fa fa-angle-double-down"></span></span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="control-label" for="input-price">{{ column_price}}</label>
+              <input type="text" name="filter_price" value="{{ filter_price}}" placeholder="{{ column_price}}" id="input-price" class="form-control" />
+            </div>
+          </div>
+
+          <div class="col-sm-4">
+            <div class="form-group">
+              <label class="control-label" for="input-model">{{ column_model}}</label>
+              <div class='input-group'>
+                <input type="text" name="filter_model" value="{{ filter_model}}" placeholder="{{ column_model}}" id="input-model" class="form-control" />
+                <span class="input-group-addon"><span class="fa fa-angle-double-down"></span></span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="control-label" for="input-model">{{ column_quantity}}</label>
+              <input type="text" name="filter_quantity" value="{{ filter_quantity}}" placeholder="{{ column_quantity}}" id="input-model" class="form-control" />
+            </div>
+          </div>
+
+          <div class="col-sm-4">
+            <div class="form-group">
+              <label class="control-label" for="input-status">{{ column_status}}</label>
+              <select name="filter_status" class="form-control" id="input-status">
+                <option value="*"></option>
+                {% if filter_status %}
+                <option value="1" selected="selected">{{ text_enabled}}</option>
+                {% else %}
+                <option value="1">{{ text_enabled}}</option>
+                {% endif %}
+                {% if filter_status != null and not filter_status %}
+                <option value="0" selected="selected">{{ text_disabled}}</option>
+                {% else %}
+                <option value="0">{{ text_disabled}}</option>
+                {% endif %}
+              </select>
+            </div>
+            <a onclick="filter();" class="btn btn-primary pull-right">{{ button_filter}}</a>
+          </div>
+
+        </div>
+      </div>
+
+      <form action="{{ delete}}" method="post" enctype="multipart/form-data" id="form-product">
+        <div class="table-responsive">
+          <table class="table table-bordered table-hover">
+            <thead>
+              <tr>
+                <td width="1" style="text-align: center;"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" /></td>
+
+                <td class="text-left">{% if sort == 'pd.name' %}
+                  <a href="{{ sort_name}}" class="{{ order|lower }}">{{ column_name|replace({' ' : ''}) }}</a>
+                  {% else %}
+                  <a href="{{ sort_name}}">{{ column_name|replace({' ' : ''}) }}</a>
+                  {% endif %}</td>
+                <td class="text-left">{% if sort == 'p.model' %}
+                  <a href="{{ sort_model}}" class="{{ order|lower }}">{{ column_model}}</a>
+                  {% else %}
+                  <a href="{{ sort_model}}">{{ column_model}}</a>
+                  {% endif %}</td>
+                <td class="text-left">{% if sort == 'p.price' %}
+                  <a href="{{ sort_price}}" class="{{ order|lower }}">{{ column_price}}</a>
+                  {% else %}
+                  <a href="{{ sort_price}}">{{ column_price}}</a>
+                  {% endif %}</td>
+                <td class="text-right">{% if sort == 'p.quantity' %}
+                  <a href="{{ sort_quantity}}" class="{{ order|lower }}">{{ column_quantity}}</a>
+                  {% else %}
+                  <a href="{{ sort_quantity}}">{{ column_quantity}}</a>
+                  {% endif %}</td>
+               <!-- membership codes starts here -->
+                 {% if module_wk_seller_group_status is defined %}
+                  <td class="text-left">{% if sort == 'p.status' %}
+                    <a href="{{ sort_status}}" class="{{ order|lower }}">{{ column_status}}</a>
+                    {% else %}
+                    <a href="{{ sort_status}}">{{ column_status}}</a>
+                    {% endif %}
+                  </td>
+                {% else %}
+                  <td class="text-left">{% if sort == 'p.status' %}
+                    <a href="{{ sort_status}}" class="{{ order|lower }}">{{ column_status}}</a>
+                    {% else %}
+                    <a href="{{ sort_status}}">{{ column_status}}</a>
+                    {% endif %}
+                  </td>
+                {% endif %}
+                 <!-- membership codes ends here -->
+
+                <td class="text-right">{{ column_sold}}</td>
+                <td class="text-right">{{ column_earned}}</td>
+                <td class="text-right">{{ column_action}}</td>
+              </tr>
+            </thead>
+            <tbody>
+              {% if products %}
+              {% for product in products %}
+              <tr>
+                <td style="text-align: center;">{% if product['selected'] %}
+                  <input type="checkbox" name="selected[]" value="{{ product['product_id']}}" checked="checked" />
+                  {% else %}
+                  <input type="checkbox" name="selected[]" value="{{ product['product_id']}}" />
+                  {% endif %}</td>
+                <td class="text-left">
+                  <img src="{{ product['thumb']}}" alt="{{ product['thumb']}}" style="padding: 1px; border: 1px solid #DDDDDD;" class="img-thumbnail" />
+                  &nbsp;
+                  {% if product['status'] %}
+                    <a href="{{ product['productLink']}}"> {{ product['name']}}</a>
+                  {% else %}
+                    {{ product['name']}}
+                  {% endif %}
+
+                </td>
+
+                <td class="text-left">{{ product['model']}}</td>
+                <td class="text-left">{% if product['special'] %}
+                  <span style="text-decoration: line-through;">{{ product['price']}}</span><br/>
+                  <span class="text-danger">{{ product['special']}}</span>
+                  {% else %}
+                  {{ product['price']}}
+                  {% endif %}</td>
+                <td class="text-right">{% if product['quantity'] <= 0 %}
+                  <span class="label label-warning">{{ product['quantity']}}</span>
+                  {% elseif product['quantity'] <= low_stock_quantity %}
+                  <span class="label label-danger">{{ product['quantity']}}</span>
+                  {% else %}
+                  <span class="label label-success">{{ product['quantity']}}</span>
+                  {% endif %}</td>
+
+                   <!-- Membership code -->
+                   {% set status = 'Undefined status' %}
+                   {% if module_wk_seller_group_status is defined %}
+                     {% if product['current_status'] == 'active' %}
+                       {% set bg_color = 'text-success bg-success' %}
+                       {% set status = 'active' %}
+                     {% elseif product['current_status'] == 'inactive' %}
+                       {% set bg_color = 'text-warning bg-warning' %}
+                       {% set status = 'In-active' %}
+                     {% elseif product['current_status'] == 'expired' %}
+                       {% set bg_color = 'text-info bg-info' %}
+                       {% set status = 'Expired' %}
+                     {% elseif product['current_status'] == 'disabled' %}
+                       {% set bg_color = 'text-danger bg-danger' %}
+                       {% set status = text_disabled %}
+                     {% endif %}
+
+                  <td class="text-left {{ bg_color}}">
+                    {{ status}}
+                  </td>
+
+                {% else %}
+                <td class="text-left">{{ product['status'] ? text_enabled : text_disabled }}</td>
+                {% endif %}
+                <!--  -->
+                <td class="text-right">
+                  <a {% if product['sold'] %} href="{{ product['soldlink'] }}" {% endif %} style="text-decoration:none;" />
+                    {% if product['sold'] <= 0 %}
+                    <span class="label label-danger">{{ product['sold']}}</span>
+                    {% elseif product['sold'] <= 5 %}
+                    <span class="label label-warning" data-toggle="tooltip" title="{{ text_soldlist_info}}">{{ product['sold']}}</span>
+                    {% else %}
+                    <span class="label label-success" data-toggle="tooltip" title="{{ text_soldlist_info}}">{{ product['sold']}}</span>
+                    {% endif %}</td>
+                  </a>
+                </td>
+                <td class="text-right">
+                  <span class="text-success">{{ product['totalearn']}}</span>
+                </td>
+
+                <!-- membership codes starts here -->
+                <td class="text-right">
+                  {% if module_wk_seller_group_status is defined %}
+                  <div class="btn-group">
+                    {% if product['action'] %}
+                      {% for action in product['action'] %}
+                        <a {% if (product['current_status'] == 'expired') %} {{ "href='" ~ action['href_relist'] ~ "'" }} {% endif %} class="btn btn-primary relist-button" {% if product['current_status'] != 'expired' %}{{ 'disabled' }}{%endif %}>
+                          <span data-toggle="tooltip" title="{{ action['text_relist']}}">
+                            <i class="fa fa-refresh"></i>
+                          </span>
+                        </a>
+                        {% if module_wk_seller_group_publish_unpublish_product is defined and module_wk_seller_group_publish_unpublish_product %}
+                        {% if (product['current_status'] == 'inactive') %}
+                          <a {{ "href='" ~ action['href_publish'] ~ "'" }} class="btn btn-success">
+                            <span data-toggle="tooltip" title="{{ action['text_publish'] }}">
+                              <i class="fa fa-thumbs-o-up"></i>
+                            </span>
+                          </a>
+                        {% else %}
+                          <a {% if (product['current_status'] != 'inactive') %} {{ "href='" ~ action['href_unpublish'] ~ "'" }} {% endif %} class="btn btn-danger">
+                            <span data-toggle="tooltip" title="{{ action['text_unpublish'] }}">
+                              <i class="fa fa-thumbs-o-down"></i>
+                            </span>
+                          </button>
+                        {% endif %}
+                        {% endif %}
+                        <a href="{{ action['href_clone']}}" class="btn btn-default" {% if product['current_status'] == 'expired' or product['current_status'] == 'disabled' %}{{ 'disabled' }}{%endif %}>
+                          <span data-toggle="tooltip" title="{{ action['text_clone_product']}}">
+                            <i class="fa fa-copy"></i>
+                          </span>
+                        </a>
+                        <a {% if (product['current_status'] != 'expired') %} {{ "href='" ~ action['href_edit'] ~ "'" }} {% endif %} class="btn btn-info" {% if product['current_status'] == 'expired' or product['current_status'] == 'disabled' %}{{ 'disabled' }}{%endif %} >
+                          <span data-toggle="tooltip" title="{{ action['text_edit']}}">
+                            <i class="fa fa-pencil"></i>
+                          </span>
+                        </a>
+                      {% endfor %}
+                    {% endif %}
+                    </div>
+                  {% elseif product['action'] %}
+                      {% for action in product['action'] %}
+                        <a href="{{ action['href']}}" class="btn btn-info"><span data-toggle="tooltip" title="{{ action['text']}}"><i class="fa fa-pencil"></i></span></a>
+                      {% endfor %}
+                    {% endif %}
+                    {% if not product['status'] %}
+                        <a href="{{ product['productPreviewLink'] }}" target="_blank" class="btn btn-info"><span data-toggle="tooltip" title="{{ text_product_preview }}"><i class="fa fa-television"></i></span></a>
+                    {% endif %}
+                </td>
+                 <!-- membership codes ends here -->
+              </tr>
+              {% endfor %}
+              {% else %}
+              <tr>
+                <td class="text-center" colspan="10">{{ text_no_results}}</td>
+              </tr>
+              {% endif %}
+            </tbody>
+          </table>
+        </div>
+      </form>
+      <div class="row">
+        <div class="col-sm-6 text-left">{{ pagination}}</div>
+        <div class="col-sm-6 text-right">{{ results}}</div>
+      </div>
+      {% else %}
+        <div class="text-danger">
+          {{ error_warning_authenticate}}
+        </div>
+      {% endif %}
+    </fieldset>
+
+    {{ content_bottom}}
+  </div>
+  {{ column_right}}
+  </div>
+</div>
+<script type="text/javascript"><!--
+
+$('#form-product').submit(function(){
+    if ($(this).attr('action').indexOf('delete',1) != -1) {
+        if (!confirm('{{ text_confirm}}')) {
+            return false;
+        }
+    }
+});
+
+function filter() {
+  url = 'index.php?route=account/customerpartner/productlist';
+
+  var filter_name = $('input[name=\'filter_name\']').val();
+
+  if (filter_name) {
+    url += '&filter_name=' + encodeURIComponent(filter_name);
+  }
+
+  var filter_model = $('input[name=\'filter_model\']').val();
+
+  if (filter_model) {
+    url += '&filter_model=' + encodeURIComponent(filter_model);
+  }
+
+  var filter_price = $('input[name=\'filter_price\']').val();
+
+  if (filter_price) {
+    url += '&filter_price=' + encodeURIComponent(filter_price);
+  }
+
+  var filter_quantity = $('input[name=\'filter_quantity\']').val();
+
+  if (filter_quantity) {
+    url += '&filter_quantity=' + encodeURIComponent(filter_quantity);
+  }
+
+  var filter_status = $('select[name=\'filter_status\']').val();
+
+  if (filter_status != '*') {
+    url += '&filter_status=' + encodeURIComponent(filter_status);
+  }
+
+  location = url;
+}
+//--></script>
+<script type="text/javascript"><!--
+$('.row input').keydown(function(e) {
+  if (e.keyCode == 13) {
+    filter();
+  }
+});
+//--></script>
+<script type="text/javascript"><!--
+$('input[name=\'filter_name\']').autocomplete({
+  delay: 500,
+  source: function(request, response) {
+    $.ajax({
+      url: 'index.php?route=customerpartner/autocomplete/product&filter_type=customerpartner_&filter_name=' +  encodeURIComponent(request),
+      dataType: 'json',
+      success: function(json) {
+        response($.map(json, function(item) {
+          return {
+            label: item.name,
+            value: item.product_id
+          }
+        }));
+      }
+    });
+  },
+  select: function(item) {
+    $('input[name=\'filter_name\']').val(item.label);
+    return false;
+  },
+  focus: function(item) {
+    return false;
+  }
+});
+
+$('input[name=\'filter_model\']').autocomplete({
+  delay: 500,
+  source: function(request, response) {
+    $.ajax({
+      url: 'index.php?route=customerpartner/autocomplete/product&filter_type=customerpartner_&filter_model=' +  encodeURIComponent(request),
+      dataType: 'json',
+      success: function(json) {
+        response($.map(json, function(item) {
+          return {
+            label: item.model,
+            value: item.product_id
+          }
+        }));
+      }
+    });
+  },
+  select: function(item) {
+    $('input[name=\'filter_model\']').val(item.label);
+    return false;
+  },
+  focus: function(item) {
+    return false;
+  }
+});
+//--></script>
+{{ footer}}

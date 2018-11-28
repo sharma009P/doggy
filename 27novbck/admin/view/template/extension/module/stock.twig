@@ -1,0 +1,174 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="pull-right">
+        <button type="submit" form="form-stock" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-save"></i></button>
+        <a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a>
+      </div>
+      <h1>{{ heading_title }}</h1>
+      <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+        <li><a href="{{ breadcrumb['href'] }}">{{ breadcrumb['text'] }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="container-fluid">
+    {% if error_warning %}
+    <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}<button type="button" class="close" data-dismiss="alert">&times;</button></div>
+    {% endif %}
+    <div class="panel panel-default">
+      <div class="panel-heading"><h3 class="panel-title"><i class="fa fa-pencil"></i> {{ text_edit }}</h3></div>
+      <div class="panel-body">
+        <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-stock" class="form-horizontal">
+          <ul class="nav nav-tabs">
+						<li class="active"><a href="#tab-settings" data-toggle="tab">{{ tab_settings }}</a></li>
+            <li><a href="#tab-theme" data-toggle="tab">{{ tab_theme }}</a></li>
+          </ul>
+          <div class="tab-content">
+            <div class="tab-pane active" id="tab-settings">
+							<div class="form-group">
+								<label class="col-sm-3 control-label" for="input-status">{{ entry_status }}</label>
+								<div class="col-sm-9">
+										<select name="module_stock_status" id="input-status" class="form-control">
+											<option value="1" {{ module_stock_status == 1 ? "selected='selected'" : ""}}>{{ text_enabled }}</option>
+											<option value="0" {{ module_stock_status == 0 ? "selected='selected'" : "" }}>{{ text_disabled }}</option>
+										</select>
+								</div>
+							</div>
+							<div class="form-group required">
+							<label class="col-sm-3 control-label" for="input-limit"><span title="" data-toggle="tooltip" data-original-title="{{ text_limit_help }}">{{ entry_limit }}</span></label>
+							<div class="col-sm-9">
+								<input id="input-limit" class="form-control" type="text" size="2" name="module_stock_report_limit" value="{{ module_stock_report_limit }}"/> 
+							</div>
+							</div>
+							<div class="form-group">
+							<label class="col-sm-3 control-label" for="input-show-cart-quantities">{{ entry_show_cart_quantities }}</label>
+							<div class="col-sm-9">
+										<select name="module_stock_show_cart_quantities" id="input-show-cart-quantities" class="form-control">
+											<option value="0" {{ module_stock_show_cart_quantities == 0 ? "selected='selected'" : "" }}>{{ text_no }}</option>
+											<option value="1" {{ module_stock_show_cart_quantities == 1 ? "selected='selected'" : "" }}>{{ text_yes }}</option>
+										</select>
+							</div>
+							</div>
+							<div class="form-group">
+							<label class="col-sm-3 control-label" for="input-check-cart-quantities"><span title="" data-toggle="tooltip" data-original-title="{{ text_check_cart_quantities_help }}">{{ entry_check_cart_quantities }}</span></label>
+							<div class="col-sm-9">
+										<select name="module_stock_check_cart_quantities" id="input-check-cart-quantities" class="form-control">
+										<option value="0" {{ module_stock_check_cart_quantities == 0 ? "selected='selected'" : "" }}>{{ text_no }}</option>
+										<option value="1" {{ module_stock_check_cart_quantities == 1 ? "selected='selected'" : "" }}>{{ text_yes }}</option>
+										</select>
+							</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label" for="product-color-flag"><span title="" data-toggle="tooltip" data-original-title="{{ text_colorize_product_help }}">{{ entry_colorize_product }}</span></label>
+								<div class="col-sm-9">
+									<select id="product-color-flag" name="module_stock_change_product_css" class="form-control">
+										<option value="0" {{ module_stock_change_product_css == 0 ? "selected='selected'" : "" }}>{{ text_no }}</option>
+										<option value="1" {{ module_stock_change_product_css == 1 ? "selected='selected'" : "" }}>{{ text_yes }}</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label" for="product-colors"></label>
+								<div class="col-sm-9">
+									<div id="product-colors" style="display: {{ module_stock_change_product_css ? 'block' : 'none' }}">
+										<em>{{ text_colorize_tip }}</em><br/>
+										<input readonly="readonly" class="color {valueElement:'pci'}" size="1"/>&nbsp;<input id="pci" type="text" size="4" name="module_stock_product_color_instock" value="{{ module_stock_product_color_instock }}"/>&nbsp;{{ text_colorize_instock }}<br/>
+										<input readonly="readonly" class="color {valueElement:'pco'}" size="1"/>&nbsp;<input id="pco" type="text" size="4" name="module_stock_product_color_outofstock" value="{{ module_stock_product_color_outofstock }}"/>&nbsp;{{ text_colorize_outofstock }}
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label" for="radio-select"><span title="" data-toggle="tooltip" data-original-title="{{ text_update_stock_display_help }}">{{ entry_update_stock_display }}</span></label>
+								<div class="col-sm-9">
+									<select id="radio-select" name="module_stock_update_stock_display" class="form-control">
+										<option value="0" {{ module_stock_update_stock_display == 0 ? "selected='selected'" : "" }}>{{ text_no }}</option>
+										<option value="1" {{ module_stock_update_stock_display == 1 ? "selected='selected'" : "" }}>{{ text_yes }}</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label" for="stock-colors"></label>
+								<div class="col-sm-4">
+									<div id="stock-colors" style="display: {{ module_stock_update_stock_display ? 'block' : 'none' }}">
+										<em>{{ text_colorize_tip }}</em><br/>
+										<input readonly="readonly" class="color {valueElement:'cci'}" size="1"/>&nbsp;<input id="cci" type="text" size="4" name="module_stock_combination_color_instock" value="{{ module_stock_combination_color_instock }}"/>&nbsp;{{ text_combination_instock }}<br/>
+										<input readonly="readonly" class="color {valueElement:'cco'}" size="1"/>&nbsp;<input id="cco" type="text" size="4" name="module_stock_combination_color_outofstock" value="{{ module_stock_combination_color_outofstock }}"/>&nbsp;{{ text_combination_outofstock }}
+									</div>			      
+								</div>
+								<div class="col-sm-5">
+									<div id="radios" style="display: {{ module_stock_update_stock_display ? 'block' : 'none' }}">
+										<strong>{{ entry_update_stock_display_behaviour }}</strong><br/>
+										<input type="radio" name="module_stock_update_stock_display_behaviour" value="0" {{ module_stock_update_stock_display_behaviour == 0 ? "checked='checked'" : "" }}>{{ entry_behavior_default }}<br/>
+										<input type="radio" name="module_stock_update_stock_display_behaviour" value="1" {{ module_stock_update_stock_display_behaviour == 1 ? "checked='checked'" : "" }}>{{ entry_behavior_quantities }}
+									</div>
+								</div>
+							</div>
+            </div>
+                    
+						<div class="tab-pane" id="tab-theme">       
+							<div class="form-group">
+								<div style="padding: 0px 15px;">
+									<div class="alert alert-info">
+										<i class="fa fa-info-circle"> </i>
+	                  {{ text_theme_customization_warning }}
+	                  <button data-dismiss="alert" class="close" type="button">&times;</button>
+	                </div>
+	              </div>
+              </div>
+							<div class="form-group">
+									<label class="col-sm-3 control-label" for="input-replace_expression"><span title="" data-toggle="tooltip" data-original-title="{{ text_replace_xpath_help }}">{{ text_replace_xpath }}</span></label>
+									<div class="col-sm-9">
+											<input id="input-replace_expression" class="form-control" type="text" name="module_stock_replace_expression" value="{{ module_stock_replace_expression }}"/>
+									</div>
+							</div>
+							<div class="form-group">
+									<label class="col-sm-3 control-label" for="input-decorate-expression"><span title="" data-toggle="tooltip" data-original-title="{{ text_decorate_html_help }}">{{ text_decorate_html }}</span></label>
+									<div class="col-sm-9">
+											<input id="input-decorate-expression" class="form-control" type="text" name="module_stock_decorate_expression" value="{{ module_stock_decorate_expression }}"/>
+									</div>
+							</div>
+							<div class="form-group">
+									<label class="col-sm-3 control-label" for="input-remove_expression"><span title="" data-toggle="tooltip" data-original-title="{{ text_remove_jquery_help }}">{{ text_remove_jquery }}</span></label>
+									<div class="col-sm-9">
+											<input id="input-remove_expression" class="form-control" type="text" name="module_stock_remove_expression" value="{{ module_stock_remove_expression }}"/> 
+									</div>
+							</div>
+							<div class="form-group">
+									<label class="col-sm-3 control-label" for="input-stock_expression"><span title="" data-toggle="tooltip" data-original-title="{{ text_stock_html_help }}">{{ text_stock_html }}</span></label>
+									<div class="col-sm-9">
+											<input id="input-stock_expression" class="form-control" type="text" name="module_stock_stock_expression" value="{{ module_stock_stock_expression }}"/> 
+									</div>
+							</div>
+            </div>   
+          </div>     
+        </form>
+      </div>
+    </div>
+  </div>
+
+<script type="text/javascript">
+
+	$('#radio-select').change(function() {
+		var selected = $(this).val();
+		if (selected === "0") {
+			$('#radios').hide();
+			$('#stock-colors').hide();
+		} else {
+			$('#radios').show();
+			$('#stock-colors').show();
+		}
+	});
+	$('#product-color-flag').change(function() {
+		var selected = $(this).val();
+		if (selected === "0") {
+			$('#product-colors').hide();
+		} else {
+			$('#product-colors').show();
+		}
+	});
+	
+</script></div>
+{{ footer }}

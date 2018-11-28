@@ -1,0 +1,84 @@
+<div id="cart" class="btn-group btn-block">
+  <button type="button" data-toggle="dropdown" data-loading-text="{{ text_loading }}" class="btn btn-inverse btn-block btn-lg dropdown-toggle linkit"> 
+  <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+   width="600px" height="600px" viewBox="0 0 600 600" enable-background="new 0 0 600 600" xml:space="preserve">
+<g>
+  <g>
+    <path fill="#2C2F33" d="M299.939,0c-63.825,0-115.712,51.888-115.712,115.712v2.802h-76.492c-6.212,0-11.449,4.75-12.059,10.962
+      L60.84,522.533c0,0.365,0,0.731,0,1.097c0,42.144,38.855,76.37,86.724,76.37h304.873c47.868,0,86.723-34.227,86.723-76.37
+      c0-0.365,0-0.731,0-1.097l-34.957-393.057c-0.609-6.212-5.725-10.962-12.059-10.962h-76.492v-2.802
+      C415.651,51.888,363.764,0,299.939,0z M208.343,115.712c0-50.548,41.048-91.595,91.596-91.595
+      c50.548,0,91.596,41.047,91.596,91.595v2.802H208.344L208.343,115.712L208.343,115.712z M481.06,142.631l33.861,381.486
+      c-0.365,28.623-28.259,51.766-62.606,51.766h-304.75c-34.348,0-62.241-23.143-62.606-51.766l33.861-381.486h65.408v55.786
+      c0,6.699,5.359,12.059,12.059,12.059s12.058-5.359,12.058-12.059v-55.786h183.192v55.786c0,6.699,5.358,12.059,12.058,12.059
+      s12.059-5.359,12.059-12.059v-55.786H481.06L481.06,142.631z"/>
+  </g>
+</g>
+</svg>
+    <!-- <i class="fa fa-shopping-bag"></i> -->
+    <span class="pricetext">
+      <!--span class="text-cart clearfix">{{text_shopping_cart}}</span-->
+      <span id="cart-total">{{ text_items }}</span>        
+    </span>
+  </button>
+<!--   <ul class="dropdown-menu pull-right">
+    {% if products or vouchers %}
+    <li>
+      <table class="table table-striped">
+        {% for product in products %}
+        <tr>
+          <td class="text-center">{% if product.thumb %} <a href="{{ product.href }}"><img src="{{ product.thumb }}" alt="{{ product.name }}" title="{{ product.name }}" class="img-thumbnail" /></a> {% endif %}</td>
+          <td class="text-left"><a href="{{ product.href }}">{{ product.name }}</a> {% if product.option %}
+            {% for option in product.option %} <br />
+            - <small>{{ option.name }} {{ option.value }}</small> {% endfor %}
+            {% endif %}
+            {% if product.recurring %} <br />
+            - <small>{{ text_recurring }} {{ product.recurring }}</small> {% endif %}</td>
+          <td class="text-right" style="white-space:nowrap;">x {{ product.quantity }}</td>
+          <td class="text-right">{{ product.total }}</td>
+          <td class="text-center"><button type="button" onclick="cart.remove('{{ product.cart_id }}');" title="{{ button_remove }}" class="btn btn-danger btn-xs"><i class="fa fa-times"></i></button></td>
+        </tr>
+        {% endfor %}
+        {% for voucher in vouchers %}
+        <tr>
+          <td class="text-center"></td>
+          <td class="text-left">{{ voucher.description }}</td>
+          <td class="text-right" style="white-space:nowrap;">x&nbsp;1</td>
+          <td class="text-right">{{ voucher.amount }}</td>
+          <td class="text-center text-danger"><button type="button" onclick="voucher.remove('{{ voucher.key }}');" title="{{ button_remove }}" class="btn btn-danger btn-xs"><i class="fa fa-times"></i></button></td>
+        </tr>
+        {% endfor %}
+      </table>
+    </li>
+    <li>
+      <div>
+        <table class="table table-bordered">
+          {% for total in totals %}
+          <tr>
+            <td class="text-right"><strong>{{ total.title }}</strong></td>
+            <td class="text-right">{{ total.text }}</td>
+          </tr>
+          {% endfor %}
+        </table>
+        <p class="text-right">
+          <a class="btn btn-primary" href="{{ cart }}"><strong> {{ text_cart }}</strong></a>&nbsp;&nbsp;&nbsp;
+          <a class="btn btn-primary" href="{{ checkout }}"><strong> {{ text_checkout }}</strong></a>
+        </p>
+      </div>
+    </li>
+    {% else %}
+    <li>
+      <p class="text-center">{{ text_empty }}</p>
+    </li>
+    {% endif %}
+  </ul> -->
+</div>
+<script>
+$(document).delegate('.linkit', 'click', function() {
+
+//alert('dsfds');
+window.location.href ='https://doggy.co.uk/index.php?route=checkout/cart';
+});
+
+
+</script>
